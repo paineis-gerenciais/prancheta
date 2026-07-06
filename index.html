@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E7A5F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Prancheta">
+<title>Prancheta · Personal Trainer</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F6F3; --surface:#FFFFFF; --ink:#1B2420; --muted:#67736C;
+  --brand:#0E7A5F; --brand-dark:#0A5C48; --brand-soft:#E3F1EC;
+  --amber:#E8940F; --amber-soft:#FCF0DB;
+  --danger:#D64545; --danger-soft:#FBE7E7;
+  --line:#E2E7E2; --radius:14px;
+  --nav-h:64px;
+  --display:'Barlow Condensed',system-ui,sans-serif;
+  --body:'Inter',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);min-height:100dvh;font-size:15px;line-height:1.45}
+button{font-family:inherit;font-size:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:16px;color:var(--ink)}
+.hidden{display:none!important}
+
+/* ---------- Shell ---------- */
+.app{max-width:520px;margin:0 auto;min-height:100dvh;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 12px)}
+.topbar{position:sticky;top:0;z-index:20;background:var(--bg);padding:calc(10px + env(safe-area-inset-top)) 16px 8px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.topbar h1{font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:.4px;text-transform:uppercase;color:var(--brand-dark)}
+.topbar .sub{font-size:12.5px;color:var(--muted)}
+.iconbtn{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--line);font-size:18px}
+.view{padding:4px 16px 24px}
+
+/* ---------- Bottom nav ---------- */
+.navbar{position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.navbar .inner{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);height:var(--nav-h)}
+.navbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:600;color:var(--muted)}
+.navbtn .ic{font-size:20px;line-height:1;padding:3px 14px;border-radius:999px}
+.navbtn.active{color:var(--brand-dark)}
+.navbtn.active .ic{background:var(--brand-soft)}
+
+/* ---------- Cards & lists ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:12px}
+.card h3{font-family:var(--display);font-size:19px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+.list-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:8px}
+.list-item .grow{flex:1;min-width:0}
+.list-item .title{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-item .meta{font-size:12.5px;color:var(--muted);margin-top:1px}
+.avatar{width:42px;height:42px;border-radius:12px;background:var(--brand-soft);color:var(--brand-dark);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:17px;flex-shrink:0}
+.time-slab{font-family:var(--display);font-weight:700;font-size:22px;color:var(--brand-dark);width:56px;flex-shrink:0;text-align:center;line-height:1}
+.time-slab small{display:block;font-size:10.5px;font-weight:600;color:var(--muted);letter-spacing:.5px;margin-top:2px}
+
+/* ---------- Chips & badges ---------- */
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;background:var(--bg);border:1px solid var(--line);color:var(--muted)}
+.chip.ok{background:var(--brand-soft);border-color:transparent;color:var(--brand-dark)}
+.chip.warn{background:var(--amber-soft);border-color:transparent;color:#9A6206}
+.chip.bad{background:var(--danger-soft);border-color:transparent;color:var(--danger)}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 18px;border-radius:12px;font-weight:600;font-size:15px;background:var(--brand);color:#fff}
+.btn:active{background:var(--brand-dark)}
+.btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.btn.soft{background:var(--brand-soft);color:var(--brand-dark)}
+.btn.warn{background:var(--amber-soft);color:#9A6206}
+.btn.bad{background:var(--danger-soft);color:var(--danger)}
+.btn.small{padding:7px 12px;font-size:13px;border-radius:10px}
+.btn.block{width:100%}
+.btn:disabled{opacity:.5}
+.fab{position:fixed;right:max(16px,calc(50vw - 244px));bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px);z-index:25;width:56px;height:56px;border-radius:18px;background:var(--brand);color:#fff;font-size:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(14,122,95,.35)}
+
+/* ---------- Stats strip ---------- */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px}
+.stat .num{font-family:var(--display);font-weight:700;font-size:26px;line-height:1.05;font-variant-numeric:tabular-nums}
+.stat .lbl{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.stat.ok .num{color:var(--brand-dark)} .stat.warn .num{color:#9A6206} .stat.bad .num{color:var(--danger)}
+
+/* ---------- Day strip (agenda) ---------- */
+.daystrip{display:flex;gap:6px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}
+.daystrip::-webkit-scrollbar{display:none}
+.daybtn{flex:0 0 46px;padding:8px 0;border-radius:12px;text-align:center;background:var(--surface);border:1px solid var(--line)}
+.daybtn small{display:block;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.daybtn b{font-family:var(--display);font-size:19px;font-weight:700}
+.daybtn.sel{background:var(--brand);border-color:var(--brand)}
+.daybtn.sel small,.daybtn.sel b{color:#fff}
+.daybtn.today:not(.sel) b{color:var(--brand-dark)}
+.weeknav{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.weeknav .lbl{font-family:var(--display);font-size:18px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+
+/* ---------- Presence buttons ---------- */
+.pres{display:flex;gap:6px;flex-shrink:0}
+.pres button{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:var(--surface);font-size:16px}
+.pres button.on-ok{background:var(--brand);border-color:var(--brand);color:#fff}
+.pres button.on-bad{background:var(--danger);border-color:var(--danger);color:#fff}
+
+/* ---------- Forms ---------- */
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:var(--surface)}
+.field textarea{resize:vertical;min-height:60px}
+.frow{display:flex;gap:8px}.frow>.field{flex:1}
+.hrow{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.hrow select,.hrow input{padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.hrow select{flex:1.3}.hrow input{flex:1}
+.hrow .del{width:38px;height:38px;border-radius:10px;background:var(--danger-soft);color:var(--danger);flex-shrink:0}
+
+/* ---------- Sheets (modals) ---------- */
+.sheet-bg{position:fixed;inset:0;z-index:40;background:rgba(20,30,26,.45);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .18s}
+.sheet-bg.open{opacity:1;pointer-events:auto}
+.sheet{width:100%;max-width:520px;max-height:92dvh;overflow-y:auto;background:var(--bg);border-radius:22px 22px 0 0;padding:10px 16px calc(20px + env(safe-area-inset-bottom));transform:translateY(24px);transition:transform .18s}
+.sheet-bg.open .sheet{transform:none}
+.sheet .grab{width:40px;height:4px;border-radius:99px;background:var(--line);margin:2px auto 12px}
+.sheet h2{font-family:var(--display);font-size:23px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:12px}
+.sheet-actions{display:flex;gap:8px;margin-top:14px}
+.sheet-actions .btn{flex:1}
+
+/* ---------- Exercícios (ficha) ---------- */
+.exrow{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px}
+.exrow .exhead{display:flex;gap:6px;margin-bottom:6px}
+.exrow .exhead input{flex:1;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font-weight:600}
+.exrow .exhead button{width:34px;height:38px;border-radius:9px;border:1px solid var(--line);background:var(--bg);font-size:14px;flex-shrink:0}
+.exgrid{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:6px;margin-bottom:6px}
+.exgrid input{padding:8px;border:1px solid var(--line);border-radius:9px;text-align:center}
+.exgrid .cap{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;text-align:center;letter-spacing:.4px;margin-bottom:2px}
+.exrow .obs{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:9px;font-size:13px}
+.exnum{font-family:var(--display);font-weight:700;color:var(--brand-dark);font-size:18px;width:26px;text-align:center;flex-shrink:0;align-self:center}
+
+/* ---------- Segmented ---------- */
+.seg{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:3px;margin-bottom:12px}
+.seg button{flex:1;padding:8px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--muted)}
+.seg button.sel{background:var(--brand);color:#fff}
+
+/* ---------- Misc ---------- */
+.empty{text-align:center;color:var(--muted);padding:32px 16px;font-size:14px}
+.empty .big{font-size:34px;margin-bottom:6px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--nav-h) + 24px);z-index:60;background:var(--ink);color:#fff;padding:10px 18px;border-radius:12px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+.monthnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.monthnav .lbl{font-family:var(--display);font-size:20px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.section-lbl{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin:16px 0 8px}
+.center-screen{min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;max-width:440px;margin:0 auto}
+.logo-mark{width:72px;height:72px;border-radius:20px;background:var(--brand);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:36px}
+.center-screen h1{font-family:var(--display);font-size:34px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--brand-dark)}
+.center-screen .tag{color:var(--muted);margin:4px 0 22px;text-align:center}
+.setup-steps{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;font-size:14px;width:100%}
+.setup-steps li{margin:0 0 10px 18px}
+.setup-steps code{background:var(--bg);padding:1px 6px;border-radius:6px;font-size:12.5px}
+a{color:var(--brand-dark)}
+@media(min-width:560px){.fab{right:calc(50vw - 260px + 16px)}}
+</style>
+</head>
+<body>
+
+<!-- ===== TELA DE CONFIGURAÇÃO (aparece se as chaves não foram coladas) ===== -->
+<div id="scr-setup" class="center-screen hidden">
+  <div class="logo-mark">🏋️</div>
+  <h1>Prancheta</h1>
+  <p class="tag">Quase lá! Falta conectar seu Firebase.</p>
+  <div class="setup-steps">
+    <ol>
+      <li>Acesse <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> e crie um projeto.</li>
+      <li>Em <b>Configurações do projeto → Seus apps</b>, adicione um app <b>Web</b> e copie o objeto <code>firebaseConfig</code>.</li>
+      <li>Abra o arquivo <code>index.html</code> e cole os valores no bloco <code>FIREBASE_CONFIG</code> (início do script).</li>
+      <li>Ative <b>Authentication → E-mail/senha</b> e crie seu usuário.</li>
+      <li>Ative o <b>Cloud Firestore</b> (modo produção) e cole as regras que estão no <code>README.md</code>.</li>
+    </ol>
+    O passo a passo completo está no <b>README.md</b> do projeto.
+  </div>
+</div>
+
+<!-- ===== LOGIN ===== -->
+<div id="scr-login" class="center-screen hidden">
+  <div class="logo-mark">🏋️</div>
+  <h1>Prancheta</h1>
+  <p class="tag">Gestão de alunos e treinos, na palma da mão.</p>
+  <div style="width:100%">
+    <div class="field"><label>E-mail</label><input id="login-email" type="email" autocomplete="username" placeholder="voce@email.com"></div>
+    <div class="field"><label>Senha</label><input id="login-pass" type="password" autocomplete="current-password" placeholder="••••••••"></div>
+    <button class="btn block" id="btn-login">Entrar</button>
+    <p id="login-err" class="hidden" style="color:var(--danger);font-size:13px;margin-top:10px;text-align:center"></p>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div id="scr-app" class="app hidden">
+  <div class="topbar">
+    <div><h1 id="topbar-title">Agenda</h1><div class="sub" id="topbar-sub"></div></div>
+    <div style="display:flex;gap:8px">
+      <button class="iconbtn hidden" id="btn-install" title="Instalar app">⬇️</button>
+      <button class="iconbtn" id="btn-logout" title="Sair">⏻</button>
+    </div>
+  </div>
+
+  <!-- AGENDA -->
+  <div class="view" id="view-agenda">
+    <div class="weeknav">
+      <button class="iconbtn" id="wk-prev">‹</button>
+      <div class="lbl" id="wk-label"></div>
+      <button class="iconbtn" id="wk-next">›</button>
+    </div>
+    <div class="daystrip" id="daystrip"></div>
+    <div id="agenda-list"></div>
+    <button class="btn ghost block" id="btn-avulsa" style="margin-top:6px">+ Aula avulsa neste dia</button>
+  </div>
+
+  <!-- ALUNOS -->
+  <div class="view hidden" id="view-alunos">
+    <div class="field"><input id="aluno-busca" type="search" placeholder="Buscar aluno…"></div>
+    <div id="alunos-list"></div>
+    <div class="section-lbl" id="lbl-arquivados-wrap" style="display:none">Arquivados</div>
+    <div id="alunos-arquivados"></div>
+  </div>
+
+  <!-- TREINOS -->
+  <div class="view hidden" id="view-treinos">
+    <div id="fichas-list"></div>
+    <div class="section-lbl">Modelos reutilizáveis</div>
+    <div id="modelos-list"></div>
+  </div>
+
+  <!-- FINANCEIRO -->
+  <div class="view hidden" id="view-fin">
+    <div class="monthnav">
+      <button class="iconbtn" id="fin-prev">‹</button>
+      <div class="lbl" id="fin-label"></div>
+      <button class="iconbtn" id="fin-next">›</button>
+    </div>
+    <div class="stats">
+      <div class="stat ok"><div class="num" id="fin-recebido">—</div><div class="lbl">Recebido</div></div>
+      <div class="stat warn"><div class="num" id="fin-pendente">—</div><div class="lbl">A receber</div></div>
+      <div class="stat bad"><div class="num" id="fin-atrasado">—</div><div class="lbl">Atrasado</div></div>
+    </div>
+    <div id="fin-list"></div>
+  </div>
+
+  <button class="fab" id="fab">+</button>
+</div>
+
+<!-- NAV -->
+<nav class="navbar hidden" id="navbar"><div class="inner">
+  <button class="navbtn active" data-view="agenda"><span class="ic">📅</span>Agenda</button>
+  <button class="navbtn" data-view="alunos"><span class="ic">👥</span>Alunos</button>
+  <button class="navbtn" data-view="treinos"><span class="ic">📋</span>Treinos</button>
+  <button class="navbtn" data-view="fin"><span class="ic">💰</span>Financeiro</button>
+</div></nav>
+
+<!-- ===== SHEET: ALUNO (form) ===== -->
+<div class="sheet-bg" id="sh-aluno"><div class="sheet">
+  <div class="grab"></div>
+  <h2 id="sh-aluno-title">Novo aluno</h2>
+  <div class="field"><label>Nome *</label><input id="al-nome" placeholder="Nome completo"></div>
+  <div class="frow">
+    <div class="field"><label>Telefone (WhatsApp)</label><input id="al-tel" type="tel" placeholder="(31) 99999-9999"></div>
+    <div class="field"><label>E-mail</label><input id="al-email" type="email" placeholder="opcional"></div>
+  </div>
+  <div class="frow">
+    <div class="field"><label>Plano</label><input id="al-plano" placeholder="Ex: 3x por semana"></div>
+  </div>
+  <div class="frow">
+    <div class="field"><label>Mensalidade (R$)</label><input id="al-valor" type="number" inputmode="decimal" placeholder="0,00"></div>
+    <div class="field"><label>Dia de vencimento</label><input id="al-venc" type="number" inputmode="numeric" min="1" max="28" placeholder="Ex: 5"></div>
+  </div>
+  <div class="field"><label>Horários fixos das aulas</label><div id="al-horarios"></div>
+    <button class="btn soft small" id="btn-add-horario">+ Adicionar horário</button>
+  </div>
+  <div class="field"><label>Observações</label><textarea id="al-obs" placeholder="Restrições, objetivos, lesões…"></textarea></div>
+  <div class="sheet-actions">
+    <button class="btn ghost" data-close>Cancelar</button>
+    <button class="btn" id="btn-save-aluno">Salvar</button>
+  </div>
+</div></div>
+
+<!-- ===== SHEET: DETALHE DO ALUNO ===== -->
+<div class="sheet-bg" id="sh-detalhe"><div class="sheet">
+  <div class="grab"></div>
+  <div id="detalhe-body"></div>
+</div></div>
+
+<!-- ===== SHEET: FICHA DE TREINO (editor) ===== -->
+<div class="sheet-bg" id="sh-ficha"><div class="sheet">
+  <div class="grab"></div>
+  <h2 id="sh-ficha-title">Nova ficha</h2>
+  <div class="frow">
+    <div class="field"><label>Nome da ficha</label><input id="fi-nome" placeholder="Ex: Treino A – Superiores"></div>
+  </div>
+  <div class="field"><label>Para quem?</label>
+    <select id="fi-aluno"><option value="">📁 Modelo reutilizável (sem aluno)</option></select>
+  </div>
+  <div class="field"><label>Basear em modelo (opcional)</label>
+    <select id="fi-modelo"><option value="">— começar do zero —</option></select>
+  </div>
+  <div class="section-lbl">Exercícios</div>
+  <div id="fi-exercicios"></div>
+  <button class="btn soft small" id="btn-add-ex">+ Adicionar exercício</button>
+  <div class="sheet-actions">
+    <button class="btn ghost" data-close>Cancelar</button>
+    <button class="btn" id="btn-save-ficha">Salvar</button>
+  </div>
+</div></div>
+
+<!-- ===== SHEET: VER FICHA / HISTÓRICO ===== -->
+<div class="sheet-bg" id="sh-verficha"><div class="sheet">
+  <div class="grab"></div>
+  <div id="verficha-body"></div>
+</div></div>
+
+<!-- ===== SHEET: AULA AVULSA ===== -->
+<div class="sheet-bg" id="sh-avulsa"><div class="sheet">
+  <div class="grab"></div>
+  <h2>Aula avulsa</h2>
+  <div class="field"><label>Aluno</label><select id="av-aluno"></select></div>
+  <div class="field"><label>Horário</label><input id="av-hora" type="time" value="07:00"></div>
+  <div class="sheet-actions">
+    <button class="btn ghost" data-close>Cancelar</button>
+    <button class="btn" id="btn-save-avulsa">Adicionar</button>
+  </div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+/* ============================================================
+   ⚙️ FIREBASE_CONFIG — COLE SUAS CHAVES AQUI
+   (Console Firebase → Configurações do projeto → Seus apps → Web)
+   ============================================================ */
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyBsvqu-ai9U_p61gnpjgNIRg9HkHbZOvUc",
+  authDomain:        "prancheta-13ef7.firebaseapp.com",
+  projectId:         "prancheta-13ef7",
+  storageBucket:     "prancheta-13ef7.firebasestorage.app",
+  messagingSenderId: "458274663560",
+  appId:             "1:458274663560:web:a3d297452af044985f833d"
+};
+/* ============================================================ */
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const DIAS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const fmtBRL = v => (v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const fmtBRLshort = v => 'R$ ' + Math.round(v||0).toLocaleString('pt-BR');
+const dstr = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const hoje = () => { const d=new Date(); d.setHours(0,0,0,0); return d; };
+const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const iniciais = n => n.trim().split(/\s+/).slice(0,2).map(p=>p[0]).join('').toUpperCase();
+
+let db=null, auth=null;
+let ALUNOS = [];            // cache em tempo real
+let FICHAS = [];            // cache em tempo real
+let selData = hoje();       // dia selecionado na agenda
+let finYM = dstr(hoje()).slice(0,7); // mês do financeiro "YYYY-MM"
+let currentView = 'agenda';
+let editAlunoId = null, editFichaId = null;
+let unsubAlunos=null, unsubFichas=null;
+
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2400); }
+function openSheet(id){ $(id).classList.add('open'); }
+function closeSheet(id){ $(id).classList.remove('open'); }
+$$('.sheet-bg').forEach(bg=>{
+  bg.addEventListener('click',e=>{ if(e.target===bg) bg.classList.remove('open'); });
+  bg.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>bg.classList.remove('open')));
+});
+
+/* ---------- Boot ---------- */
+function boot(){
+  if(!FIREBASE_CONFIG.apiKey || FIREBASE_CONFIG.apiKey.startsWith('COLE_')){
+    $('#scr-setup').classList.remove('hidden'); return;
+  }
+  firebase.initializeApp(FIREBASE_CONFIG);
+  auth = firebase.auth(); db = firebase.firestore();
+  db.enablePersistence({synchronizeTabs:true}).catch(()=>{});
+  auth.onAuthStateChanged(user=>{
+    if(user){ showApp(); } else { showLogin(); }
+  });
+}
+function showLogin(){
+  $('#scr-login').classList.remove('hidden');
+  $('#scr-app').classList.add('hidden'); $('#navbar').classList.add('hidden');
+  if(unsubAlunos){unsubAlunos();unsubAlunos=null} if(unsubFichas){unsubFichas();unsubFichas=null}
+}
+function showApp(){
+  $('#scr-login').classList.add('hidden');
+  $('#scr-app').classList.remove('hidden'); $('#navbar').classList.remove('hidden');
+  listenData(); setView('agenda');
+}
+$('#btn-login').addEventListener('click', async ()=>{
+  const btn=$('#btn-login'); btn.disabled=true; $('#login-err').classList.add('hidden');
+  try{ await auth.signInWithEmailAndPassword($('#login-email').value.trim(), $('#login-pass').value); }
+  catch(e){ const el=$('#login-err'); el.textContent='Não foi possível entrar. Confira e-mail e senha.'; el.classList.remove('hidden'); }
+  btn.disabled=false;
+});
+$('#login-pass').addEventListener('keydown',e=>{ if(e.key==='Enter') $('#btn-login').click(); });
+$('#btn-logout').addEventListener('click',()=>{ if(confirm('Sair da conta?')) auth.signOut(); });
+
+/* ---------- Listeners Firestore ---------- */
+function listenData(){
+  if(unsubAlunos) return;
+  unsubAlunos = db.collection('alunos').onSnapshot(snap=>{
+    ALUNOS = snap.docs.map(d=>({id:d.id,...d.data()}));
+    ALUNOS.sort((a,b)=>a.nome.localeCompare(b.nome,'pt'));
+    render();
+  });
+  unsubFichas = db.collection('fichas').onSnapshot(snap=>{
+    FICHAS = snap.docs.map(d=>({id:d.id,...d.data()}));
+    render();
+  });
+}
+
+/* ---------- Navegação ---------- */
+const TITLES = {agenda:'Agenda', alunos:'Alunos', treinos:'Treinos', fin:'Financeiro'};
+function setView(v){
+  currentView=v;
+  $$('.view').forEach(el=>el.classList.add('hidden'));
+  $('#view-'+v).classList.remove('hidden');
+  $$('.navbtn').forEach(b=>b.classList.toggle('active', b.dataset.view===v));
+  $('#topbar-title').textContent = TITLES[v];
+  const h=hoje();
+  $('#topbar-sub').textContent = `${DIAS[h.getDay()]}, ${h.getDate()} de ${MESES[h.getMonth()]}`;
+  $('#fab').classList.toggle('hidden', v==='agenda'||v==='fin');
+  render();
+  window.scrollTo(0,0);
+}
+$$('.navbtn').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
+$('#fab').addEventListener('click',()=>{
+  if(currentView==='alunos') openAlunoForm(null);
+  if(currentView==='treinos') openFichaForm(null);
+});
+
+function render(){
+  if(currentView==='agenda') renderAgenda();
+  if(currentView==='alunos') renderAlunos();
+  if(currentView==='treinos') renderFichas();
+  if(currentView==='fin') renderFin();
+}
+
+/* ============================================================
+   AGENDA
+   ============================================================ */
+function inicioSemana(d){ const x=new Date(d); x.setDate(x.getDate()-x.getDay()); return x; }
+$('#wk-prev').addEventListener('click',()=>{ selData.setDate(selData.getDate()-7); renderAgenda(); });
+$('#wk-next').addEventListener('click',()=>{ selData.setDate(selData.getDate()+7); renderAgenda(); });
+
+async function renderAgenda(){
+  const ini = inicioSemana(selData);
+  const fim = new Date(ini); fim.setDate(fim.getDate()+6);
+  $('#wk-label').textContent = `${ini.getDate()} ${MESES[ini.getMonth()].slice(0,3)} – ${fim.getDate()} ${MESES[fim.getMonth()].slice(0,3)}`;
+  const strip=$('#daystrip'); strip.innerHTML='';
+  const hstr = dstr(hoje());
+  for(let i=0;i<7;i++){
+    const d=new Date(ini); d.setDate(d.getDate()+i);
+    const b=document.createElement('button');
+    b.className='daybtn'+(dstr(d)===dstr(selData)?' sel':'')+(dstr(d)===hstr?' today':'');
+    b.innerHTML=`<small>${DIAS[d.getDay()]}</small><b>${d.getDate()}</b>`;
+    b.addEventListener('click',()=>{ selData=d; renderAgenda(); });
+    strip.appendChild(b);
+  }
+  // aulas fixas do dia da semana
+  const dow = selData.getDay(), dataStr = dstr(selData);
+  const fixas = [];
+  ALUNOS.filter(a=>a.ativo!==false).forEach(a=>{
+    (a.horarios||[]).forEach(h=>{ if(h.dia===dow) fixas.push({alunoId:a.id, nome:a.nome, hora:h.hora, avulsa:false}); });
+  });
+  // presenças do dia (inclui avulsas)
+  let presMap = {};
+  try{
+    const snap = await db.collection('presencas').where('data','==',dataStr).get();
+    snap.forEach(d=>{ presMap[d.data().alunoId+'|'+d.data().hora] = {id:d.id,...d.data()}; });
+  }catch(e){}
+  Object.values(presMap).forEach(p=>{
+    if(p.avulsa && !fixas.some(f=>f.alunoId===p.alunoId && f.hora===p.hora)){
+      const a=ALUNOS.find(x=>x.id===p.alunoId);
+      fixas.push({alunoId:p.alunoId, nome:a?a.nome:'(aluno removido)', hora:p.hora, avulsa:true});
+    }
+  });
+  fixas.sort((x,y)=>x.hora.localeCompare(y.hora));
+  const list=$('#agenda-list'); list.innerHTML='';
+  if(!fixas.length){ list.innerHTML='<div class="empty"><div class="big">🗓️</div>Nenhuma aula neste dia.<br>Cadastre horários fixos nos alunos ou adicione uma aula avulsa.</div>'; return; }
+  fixas.forEach(f=>{
+    const p = presMap[f.alunoId+'|'+f.hora];
+    const st = p?p.status:null;
+    const el=document.createElement('div'); el.className='list-item';
+    el.innerHTML=`
+      <div class="time-slab">${f.hora}<small>${f.avulsa?'AVULSA':'FIXA'}</small></div>
+      <div class="grow"><div class="title">${esc(f.nome)}</div>
+        <div class="meta">${st==='presente'?'✅ Presente':st==='falta'?'❌ Faltou':'Aguardando check-in'}</div></div>
+      <div class="pres">
+        <button class="${st==='presente'?'on-ok':''}" data-st="presente" title="Presente">✓</button>
+        <button class="${st==='falta'?'on-bad':''}" data-st="falta" title="Falta">✕</button>
+      </div>`;
+    el.querySelectorAll('.pres button').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const novo = (st===btn.dataset.st) ? null : btn.dataset.st;
+        const ref = db.collection('presencas').doc(`${f.alunoId}_${dataStr}_${f.hora.replace(':','')}`);
+        if(novo===null && !f.avulsa){ await ref.delete(); }
+        else{ await ref.set({alunoId:f.alunoId, data:dataStr, hora:f.hora, status:novo, avulsa:f.avulsa},{merge:true}); }
+        renderAgenda();
+      });
+    });
+    el.querySelector('.grow').addEventListener('click',()=>openDetalhe(f.alunoId));
+    list.appendChild(el);
+  });
+}
+
+/* Aula avulsa */
+$('#btn-avulsa').addEventListener('click',()=>{
+  const sel=$('#av-aluno'); sel.innerHTML='';
+  ALUNOS.filter(a=>a.ativo!==false).forEach(a=>{ const o=document.createElement('option'); o.value=a.id; o.textContent=a.nome; sel.appendChild(o); });
+  if(!sel.options.length){ toast('Cadastre um aluno primeiro.'); return; }
+  openSheet('#sh-avulsa');
+});
+$('#btn-save-avulsa').addEventListener('click', async ()=>{
+  const alunoId=$('#av-aluno').value, hora=$('#av-hora').value, dataStr=dstr(selData);
+  if(!alunoId||!hora) return;
+  await db.collection('presencas').doc(`${alunoId}_${dataStr}_${hora.replace(':','')}`)
+    .set({alunoId, data:dataStr, hora, status:null, avulsa:true});
+  closeSheet('#sh-avulsa'); toast('Aula avulsa adicionada.'); renderAgenda();
+});
+/* ============================================================
+   ALUNOS
+   ============================================================ */
+function renderAlunos(){
+  const q = ($('#aluno-busca').value||'').toLowerCase();
+  const ativos = ALUNOS.filter(a=>a.ativo!==false && a.nome.toLowerCase().includes(q));
+  const arq = ALUNOS.filter(a=>a.ativo===false && a.nome.toLowerCase().includes(q));
+  const mk = a=>{
+    const el=document.createElement('div'); el.className='list-item';
+    const hs=(a.horarios||[]).map(h=>`${DIAS[h.dia]} ${h.hora}`).join(' · ');
+    el.innerHTML=`<div class="avatar">${iniciais(a.nome)}</div>
+      <div class="grow"><div class="title">${esc(a.nome)}</div>
+      <div class="meta">${esc(a.plano||'Sem plano')}${hs?' · '+hs:''}</div></div>
+      <span class="chip ${a.ativo===false?'':'ok'}">${a.ativo===false?'Arquivado':fmtBRLshort(a.valorMensal)}</span>`;
+    el.addEventListener('click',()=>openDetalhe(a.id));
+    return el;
+  };
+  const l=$('#alunos-list'); l.innerHTML='';
+  if(!ativos.length) l.innerHTML='<div class="empty"><div class="big">👥</div>Nenhum aluno ainda.<br>Toque no + para cadastrar o primeiro.</div>';
+  ativos.forEach(a=>l.appendChild(mk(a)));
+  const la=$('#alunos-arquivados'); la.innerHTML='';
+  $('#lbl-arquivados-wrap').style.display = arq.length?'block':'none';
+  arq.forEach(a=>la.appendChild(mk(a)));
+}
+$('#aluno-busca').addEventListener('input',renderAlunos);
+
+function addHorarioRow(h){
+  const row=document.createElement('div'); row.className='hrow';
+  row.innerHTML=`<select>${DIAS.map((d,i)=>`<option value="${i}" ${h&&h.dia===i?'selected':''}>${d}</option>`).join('')}</select>
+    <input type="time" value="${h?h.hora:'07:00'}">
+    <button class="del" type="button">🗑</button>`;
+  row.querySelector('.del').addEventListener('click',()=>row.remove());
+  $('#al-horarios').appendChild(row);
+}
+$('#btn-add-horario').addEventListener('click',()=>addHorarioRow(null));
+
+function openAlunoForm(id){
+  editAlunoId=id;
+  const a = id? ALUNOS.find(x=>x.id===id) : null;
+  $('#sh-aluno-title').textContent = a?'Editar aluno':'Novo aluno';
+  $('#al-nome').value=a?.nome||''; $('#al-tel').value=a?.telefone||'';
+  $('#al-email').value=a?.email||''; $('#al-plano').value=a?.plano||'';
+  $('#al-valor').value=a?.valorMensal??''; $('#al-venc').value=a?.diaVencimento??'';
+  $('#al-obs').value=a?.obs||'';
+  $('#al-horarios').innerHTML='';
+  (a?.horarios||[]).forEach(addHorarioRow);
+  openSheet('#sh-aluno');
+}
+$('#btn-save-aluno').addEventListener('click', async ()=>{
+  const nome=$('#al-nome').value.trim();
+  if(!nome){ toast('Informe o nome do aluno.'); return; }
+  const horarios=[...$('#al-horarios').children].map(r=>({
+    dia:+r.querySelector('select').value, hora:r.querySelector('input').value
+  })).filter(h=>h.hora);
+  const data={ nome, telefone:$('#al-tel').value.trim(), email:$('#al-email').value.trim(),
+    plano:$('#al-plano').value.trim(), valorMensal:+($('#al-valor').value||0),
+    diaVencimento:Math.min(28,Math.max(1,+($('#al-venc').value||5))), horarios,
+    obs:$('#al-obs').value.trim() };
+  if(editAlunoId){ await db.collection('alunos').doc(editAlunoId).set(data,{merge:true}); toast('Aluno atualizado.'); }
+  else{ data.ativo=true; data.criadoEm=firebase.firestore.FieldValue.serverTimestamp();
+    await db.collection('alunos').add(data); toast('Aluno cadastrado.'); }
+  closeSheet('#sh-aluno');
+});
+
+/* Detalhe do aluno */
+async function openDetalhe(id){
+  const a=ALUNOS.find(x=>x.id===id); if(!a) return;
+  const hs=(a.horarios||[]).map(h=>`<span class="chip">${DIAS[h.dia]} ${h.hora}</span>`).join(' ')||'<span class="chip">Sem horário fixo</span>';
+  const fichasAluno = FICHAS.filter(f=>f.alunoId===id && f.ativo!==false);
+  // frequência do mês corrente
+  const ym=dstr(hoje()).slice(0,7);
+  let pres=0,faltas=0;
+  try{
+    const snap=await db.collection('presencas').where('alunoId','==',id).get();
+    snap.forEach(d=>{ const p=d.data(); if(p.data.startsWith(ym)){ if(p.status==='presente')pres++; if(p.status==='falta')faltas++; }});
+  }catch(e){}
+  const tel=(a.telefone||'').replace(/\D/g,'');
+  $('#detalhe-body').innerHTML=`
+    <h2>${esc(a.nome)} ${a.ativo===false?'<span class="chip">Arquivado</span>':''}</h2>
+    <div class="card">
+      <div class="meta" style="color:var(--muted);font-size:13px">
+        ${esc(a.plano||'Sem plano definido')} · ${fmtBRL(a.valorMensal)} · vence dia ${a.diaVencimento||'—'}<br>
+        ${a.telefone?esc(a.telefone):''} ${a.email?' · '+esc(a.email):''}
+      </div>
+      <div style="margin-top:8px">${hs}</div>
+      ${a.obs?`<div style="margin-top:8px;font-size:13px">📝 ${esc(a.obs)}</div>`:''}
+    </div>
+    <div class="stats">
+      <div class="stat ok"><div class="num">${pres}</div><div class="lbl">Presenças/mês</div></div>
+      <div class="stat bad"><div class="num">${faltas}</div><div class="lbl">Faltas/mês</div></div>
+      <div class="stat"><div class="num">${fichasAluno.length}</div><div class="lbl">Fichas ativas</div></div>
+    </div>
+    ${fichasAluno.map(f=>`<div class="list-item" data-ficha="${f.id}" style="cursor:pointer">
+      <div class="avatar">📋</div><div class="grow"><div class="title">${esc(f.nome)}</div>
+      <div class="meta">v${f.versao||1} · ${(f.exercicios||[]).length} exercícios</div></div><span>›</span></div>`).join('')}
+    <div class="sheet-actions" style="flex-wrap:wrap">
+      <button class="btn soft" id="dt-editar">✏️ Editar</button>
+      <button class="btn soft" id="dt-ficha">📋 Nova ficha</button>
+      ${tel?`<button class="btn soft" id="dt-whats">💬 WhatsApp</button>`:''}
+      <button class="btn ${a.ativo===false?'':'warn'}" id="dt-arquivar">${a.ativo===false?'↩️ Reativar':'📦 Arquivar'}</button>
+    </div>`;
+  $('#dt-editar').addEventListener('click',()=>{ closeSheet('#sh-detalhe'); openAlunoForm(id); });
+  $('#dt-ficha').addEventListener('click',()=>{ closeSheet('#sh-detalhe'); openFichaForm(null,id); });
+  const w=$('#dt-whats'); if(w) w.addEventListener('click',()=>window.open('https://wa.me/55'+tel,'_blank'));
+  $('#dt-arquivar').addEventListener('click',async()=>{
+    await db.collection('alunos').doc(id).set({ativo:a.ativo===false},{merge:true});
+    closeSheet('#sh-detalhe'); toast(a.ativo===false?'Aluno reativado.':'Aluno arquivado.');
+  });
+  $('#detalhe-body').querySelectorAll('[data-ficha]').forEach(el=>{
+    el.addEventListener('click',()=>{ closeSheet('#sh-detalhe'); openVerFicha(el.dataset.ficha); });
+  });
+  openSheet('#sh-detalhe');
+}
+
+/* ============================================================
+   FINANCEIRO
+   ============================================================ */
+function ymLabel(ym){ const [y,m]=ym.split('-'); return `${MESES[+m-1]} ${y}`; }
+function shiftYM(ym,delta){ const [y,m]=ym.split('-').map(Number); const d=new Date(y,m-1+delta,1); return dstr(d).slice(0,7); }
+$('#fin-prev').addEventListener('click',()=>{ finYM=shiftYM(finYM,-1); renderFin(); });
+$('#fin-next').addEventListener('click',()=>{ finYM=shiftYM(finYM,1); renderFin(); });
+
+async function renderFin(){
+  $('#fin-label').textContent = ymLabel(finYM);
+  // garante cobranças do mês p/ alunos ativos
+  const ativos = ALUNOS.filter(a=>a.ativo!==false && (a.valorMensal||0)>0);
+  const batch = db.batch(); let created=0;
+  const snap = await db.collection('pagamentos').where('competencia','==',finYM).get();
+  const existentes = {}; snap.forEach(d=>existentes[d.data().alunoId]=({id:d.id,...d.data()}));
+  ativos.forEach(a=>{
+    if(!existentes[a.id]){
+      const ref=db.collection('pagamentos').doc(`${a.id}_${finYM}`);
+      batch.set(ref,{alunoId:a.id, competencia:finYM, valor:a.valorMensal, status:'pendente'});
+      existentes[a.id]={id:ref.id, alunoId:a.id, competencia:finYM, valor:a.valorMensal, status:'pendente'};
+      created++;
+    }
+  });
+  if(created) await batch.commit();
+  const pags = Object.values(existentes);
+  const hj=hoje(), hymd=dstr(hj), thisYM=hymd.slice(0,7);
+  let rec=0,pen=0,atr=0;
+  const list=$('#fin-list'); list.innerHTML='';
+  if(!pags.length){ list.innerHTML='<div class="empty"><div class="big">💰</div>Nenhuma cobrança neste mês.<br>Cadastre alunos com mensalidade.</div>'; }
+  pags.map(p=>({...p, aluno:ALUNOS.find(a=>a.id===p.alunoId)}))
+    .filter(p=>p.aluno)
+    .sort((x,y)=>x.aluno.nome.localeCompare(y.aluno.nome,'pt'))
+    .forEach(p=>{
+      const venc = p.aluno.diaVencimento||5;
+      const vencStr = `${finYM}-${String(venc).padStart(2,'0')}`;
+      const atrasado = p.status!=='pago' && (finYM<thisYM || (finYM===thisYM && hymd>vencStr));
+      if(p.status==='pago') rec+=p.valor; else if(atrasado) atr+=p.valor; else pen+=p.valor;
+      const el=document.createElement('div'); el.className='list-item';
+      el.innerHTML=`<div class="avatar">${iniciais(p.aluno.nome)}</div>
+        <div class="grow"><div class="title">${esc(p.aluno.nome)}</div>
+        <div class="meta">${fmtBRL(p.valor)} · vence dia ${venc}</div></div>
+        <span class="chip ${p.status==='pago'?'ok':atrasado?'bad':'warn'}">${p.status==='pago'?'Pago ✓':atrasado?'Atrasado':'Pendente'}</span>`;
+      el.addEventListener('click',async()=>{
+        const novo = p.status==='pago' ? 'pendente' : 'pago';
+        if(!confirm(`${p.aluno.nome}: marcar como ${novo==='pago'?'PAGO':'pendente'}?`)) return;
+        await db.collection('pagamentos').doc(p.id).set(
+          {status:novo, pagoEm: novo==='pago'?firebase.firestore.FieldValue.serverTimestamp():null},{merge:true});
+        renderFin();
+      });
+      list.appendChild(el);
+    });
+  $('#fin-recebido').textContent=fmtBRLshort(rec);
+  $('#fin-pendente').textContent=fmtBRLshort(pen);
+  $('#fin-atrasado').textContent=fmtBRLshort(atr);
+}
+/* ============================================================
+   TREINOS (fichas)
+   ============================================================ */
+function renderFichas(){
+  const list=$('#fichas-list'); list.innerHTML='';
+  const porAluno = FICHAS.filter(f=>f.alunoId && f.ativo!==false)
+    .map(f=>({...f, aluno:ALUNOS.find(a=>a.id===f.alunoId)}))
+    .filter(f=>f.aluno)
+    .sort((x,y)=>x.aluno.nome.localeCompare(y.aluno.nome,'pt'));
+  if(!porAluno.length) list.innerHTML='<div class="empty"><div class="big">📋</div>Nenhuma ficha ativa.<br>Toque no + para montar a primeira.</div>';
+  porAluno.forEach(f=>{
+    const el=document.createElement('div'); el.className='list-item';
+    el.innerHTML=`<div class="avatar">${iniciais(f.aluno.nome)}</div>
+      <div class="grow"><div class="title">${esc(f.nome)}</div>
+      <div class="meta">${esc(f.aluno.nome)} · v${f.versao||1} · ${(f.exercicios||[]).length} exercícios</div></div><span>›</span>`;
+    el.addEventListener('click',()=>openVerFicha(f.id));
+    list.appendChild(el);
+  });
+  const ml=$('#modelos-list'); ml.innerHTML='';
+  const modelos = FICHAS.filter(f=>!f.alunoId && f.ativo!==false).sort((x,y)=>x.nome.localeCompare(y.nome,'pt'));
+  if(!modelos.length) ml.innerHTML='<div class="empty" style="padding:16px">Nenhum modelo salvo ainda.</div>';
+  modelos.forEach(f=>{
+    const el=document.createElement('div'); el.className='list-item';
+    el.innerHTML=`<div class="avatar">📁</div><div class="grow"><div class="title">${esc(f.nome)}</div>
+      <div class="meta">Modelo · ${(f.exercicios||[]).length} exercícios</div></div><span>›</span>`;
+    el.addEventListener('click',()=>openVerFicha(f.id));
+    ml.appendChild(el);
+  });
+}
+
+function addExRow(ex,i){
+  const wrap=$('#fi-exercicios');
+  const row=document.createElement('div'); row.className='exrow'; row.style.display='flex'; row.style.gap='8px';
+  row.innerHTML=`<div class="exnum">${wrap.children.length+1}</div><div style="flex:1">
+    <div class="exhead">
+      <input class="ex-nome" placeholder="Nome do exercício" value="${esc(ex?.nome||'')}">
+      <button type="button" class="mv-up" title="Subir">↑</button>
+      <button type="button" class="mv-dn" title="Descer">↓</button>
+      <button type="button" class="rm" title="Remover" style="color:var(--danger)">🗑</button>
+    </div>
+    <div class="exgrid">
+      <div><div class="cap">Séries</div><input class="ex-series" inputmode="numeric" value="${esc(ex?.series||'')}" placeholder="4"></div>
+      <div><div class="cap">Reps</div><input class="ex-reps" value="${esc(ex?.reps||'')}" placeholder="10-12"></div>
+      <div><div class="cap">Carga</div><input class="ex-carga" value="${esc(ex?.carga||'')}" placeholder="20kg"></div>
+    </div>
+    <input class="obs ex-obs" placeholder="Observação (opcional)" value="${esc(ex?.obs||'')}">
+  </div>`;
+  const renum=()=>[...wrap.children].forEach((r,idx)=>r.querySelector('.exnum').textContent=idx+1);
+  row.querySelector('.rm').addEventListener('click',()=>{ row.remove(); renum(); });
+  row.querySelector('.mv-up').addEventListener('click',()=>{ if(row.previousElementSibling){ wrap.insertBefore(row,row.previousElementSibling); renum(); }});
+  row.querySelector('.mv-dn').addEventListener('click',()=>{ if(row.nextElementSibling){ wrap.insertBefore(row.nextElementSibling,row); renum(); }});
+  wrap.appendChild(row);
+}
+$('#btn-add-ex').addEventListener('click',()=>addExRow(null));
+
+function fillFichaSelects(alunoSel){
+  const sa=$('#fi-aluno');
+  sa.innerHTML='<option value="">📁 Modelo reutilizável (sem aluno)</option>';
+  ALUNOS.filter(a=>a.ativo!==false).forEach(a=>{
+    const o=document.createElement('option'); o.value=a.id; o.textContent=a.nome;
+    if(a.id===alunoSel) o.selected=true; sa.appendChild(o);
+  });
+  const sm=$('#fi-modelo');
+  sm.innerHTML='<option value="">— começar do zero —</option>';
+  FICHAS.filter(f=>!f.alunoId && f.ativo!==false).forEach(f=>{
+    const o=document.createElement('option'); o.value=f.id; o.textContent=f.nome; sm.appendChild(o);
+  });
+}
+$('#fi-modelo').addEventListener('change',e=>{
+  const m=FICHAS.find(f=>f.id===e.target.value); if(!m) return;
+  $('#fi-exercicios').innerHTML='';
+  (m.exercicios||[]).forEach(ex=>addExRow(ex));
+  if(!$('#fi-nome').value) $('#fi-nome').value=m.nome;
+});
+
+function openFichaForm(fichaId, alunoId){
+  editFichaId=fichaId;
+  const f=fichaId?FICHAS.find(x=>x.id===fichaId):null;
+  $('#sh-ficha-title').textContent = f?`Editar ficha (nova versão v${(f.versao||1)+1})`:'Nova ficha';
+  fillFichaSelects(f?f.alunoId:alunoId||'');
+  $('#fi-nome').value=f?.nome||'';
+  $('#fi-modelo').value='';
+  $('#fi-exercicios').innerHTML='';
+  (f?.exercicios||[]).forEach(ex=>addExRow(ex));
+  if(!f) addExRow(null);
+  openSheet('#sh-ficha');
+}
+$('#btn-save-ficha').addEventListener('click', async ()=>{
+  const nome=$('#fi-nome').value.trim();
+  if(!nome){ toast('Dê um nome à ficha.'); return; }
+  const exercicios=[...$('#fi-exercicios').children].map(r=>({
+    nome:r.querySelector('.ex-nome').value.trim(),
+    series:r.querySelector('.ex-series').value.trim(),
+    reps:r.querySelector('.ex-reps').value.trim(),
+    carga:r.querySelector('.ex-carga').value.trim(),
+    obs:r.querySelector('.ex-obs').value.trim()
+  })).filter(e=>e.nome);
+  if(!exercicios.length){ toast('Adicione ao menos um exercício.'); return; }
+  const alunoId=$('#fi-aluno').value||null;
+  const antiga = editFichaId?FICHAS.find(x=>x.id===editFichaId):null;
+  const data={ nome, alunoId, exercicios, ativo:true,
+    versao: antiga && antiga.alunoId===alunoId ? (antiga.versao||1)+1 : 1,
+    criadoEm: firebase.firestore.FieldValue.serverTimestamp() };
+  if(antiga && antiga.alunoId===alunoId && alunoId){
+    // versiona: nova doc, antiga vira histórico
+    await db.collection('fichas').add(data);
+    await db.collection('fichas').doc(editFichaId).set({ativo:false},{merge:true});
+    toast(`Nova versão v${data.versao} salva. A anterior foi para o histórico.`);
+  } else if(antiga && !alunoId){
+    await db.collection('fichas').doc(editFichaId).set({nome,exercicios},{merge:true});
+    toast('Modelo atualizado.');
+  } else {
+    await db.collection('fichas').add(data);
+    toast(alunoId?'Ficha criada.':'Modelo salvo.');
+  }
+  closeSheet('#sh-ficha');
+});
+
+/* Ver ficha + histórico + compartilhar */
+function fichaTexto(f, aluno){
+  let t=`*${f.nome}*${f.versao?` (v${f.versao})`:''}\n`;
+  if(aluno) t+=`Aluno: ${aluno.nome}\n`;
+  t+='\n';
+  (f.exercicios||[]).forEach((e,i)=>{
+    t+=`${i+1}. *${e.nome}*`;
+    const bits=[e.series&&`${e.series}x`, e.reps, e.carga].filter(Boolean).join(' ');
+    if(bits) t+=` — ${bits}`;
+    t+='\n';
+    if(e.obs) t+=`   _${e.obs}_\n`;
+  });
+  t+='\n— Enviado pela Prancheta 🏋️';
+  return t;
+}
+function openVerFicha(id){
+  const f=FICHAS.find(x=>x.id===id); if(!f) return;
+  const aluno=f.alunoId?ALUNOS.find(a=>a.id===f.alunoId):null;
+  const historico = f.alunoId ? FICHAS.filter(x=>x.alunoId===f.alunoId && x.nome===f.nome && x.id!==f.id)
+      .sort((a,b)=>(b.versao||1)-(a.versao||1)) : [];
+  const isAtiva=f.ativo!==false;
+  $('#verficha-body').innerHTML=`
+    <h2>${esc(f.nome)} <span class="chip ${isAtiva?'ok':''}">${f.alunoId?`v${f.versao||1}${isAtiva?'':' · histórico'}`:'Modelo'}</span></h2>
+    ${aluno?`<div style="color:var(--muted);font-size:13.5px;margin:-6px 0 12px">${esc(aluno.nome)}</div>`:''}
+    ${(f.exercicios||[]).map((e,i)=>`<div class="list-item">
+      <div class="exnum">${i+1}</div>
+      <div class="grow"><div class="title">${esc(e.nome)}</div>
+        <div class="meta">${[e.series&&esc(e.series)+' séries', e.reps&&esc(e.reps)+' reps', e.carga&&esc(e.carga)].filter(Boolean).join(' · ')||'—'}
+        ${e.obs?`<br>📝 ${esc(e.obs)}`:''}</div></div></div>`).join('')}
+    ${historico.length?`<div class="section-lbl">Histórico de versões (evolução)</div>
+      ${historico.map(h=>`<div class="list-item" data-h="${h.id}" style="cursor:pointer">
+        <div class="avatar">🕐</div><div class="grow"><div class="title">v${h.versao||1}</div>
+        <div class="meta">${(h.exercicios||[]).length} exercícios</div></div><span>›</span></div>`).join('')}`:''}
+    <div class="sheet-actions" style="flex-wrap:wrap">
+      ${isAtiva?`<button class="btn soft" id="vf-editar">✏️ ${f.alunoId?'Nova versão':'Editar'}</button>`:''}
+      ${aluno&&aluno.telefone?`<button class="btn" id="vf-whats">💬 Enviar no WhatsApp</button>`:''}
+      <button class="btn ghost" id="vf-copiar">📄 Copiar texto</button>
+      ${isAtiva?`<button class="btn bad" id="vf-excluir">🗑</button>`:''}
+    </div>`;
+  const eb=$('#vf-editar'); if(eb) eb.addEventListener('click',()=>{ closeSheet('#sh-verficha'); openFichaForm(id); });
+  const wb=$('#vf-whats'); if(wb) wb.addEventListener('click',()=>{
+    const tel=aluno.telefone.replace(/\D/g,'');
+    window.open(`https://wa.me/55${tel}?text=${encodeURIComponent(fichaTexto(f,aluno))}`,'_blank');
+  });
+  $('#vf-copiar').addEventListener('click',async()=>{
+    try{ await navigator.clipboard.writeText(fichaTexto(f,aluno)); toast('Ficha copiada!'); }
+    catch(e){ toast('Não foi possível copiar.'); }
+  });
+  const xb=$('#vf-excluir'); if(xb) xb.addEventListener('click',async()=>{
+    if(!confirm('Excluir esta ficha? (as versões antigas do histórico são mantidas)')) return;
+    await db.collection('fichas').doc(id).delete();
+    closeSheet('#sh-verficha'); toast('Ficha excluída.');
+  });
+  $('#verficha-body').querySelectorAll('[data-h]').forEach(el=>{
+    el.addEventListener('click',()=>openVerFicha(el.dataset.h));
+  });
+  openSheet('#sh-verficha');
+}
+
+/* ============================================================
+   PWA — instalação e service worker
+   ============================================================ */
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault(); deferredPrompt=e;
+  $('#btn-install').classList.remove('hidden');
+});
+$('#btn-install').addEventListener('click',async()=>{
+  if(deferredPrompt){ deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; $('#btn-install').classList.add('hidden'); }
+});
+window.addEventListener('appinstalled',()=>{ $('#btn-install').classList.add('hidden'); toast('App instalado! 🎉'); });
+// dica para iOS (não dispara beforeinstallprompt)
+(function(){
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  const standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+  if(isIOS && !standalone){
+    const b=$('#btn-install'); b.classList.remove('hidden');
+    b.addEventListener('click',()=>alert('Para instalar no iPhone/iPad:\n\n1. Toque no botão Compartilhar (□↑) do Safari\n2. Escolha "Adicionar à Tela de Início"'));
+  }
+})();
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+
+boot();
+</script>
+</body>
+</html>
