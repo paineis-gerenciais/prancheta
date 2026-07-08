@@ -38,13 +38,14 @@ input,select,textarea{font-family:inherit;font-size:16px;color:var(--ink)}
 .topbar h1{font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:.4px;text-transform:uppercase;color:var(--brand-dark)}
 .topbar .sub{font-size:12.5px;color:var(--muted)}
 .iconbtn{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--line);font-size:18px}
+.iconbtn svg{width:19px;height:19px;stroke:var(--ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .view{padding:4px 16px 24px}
 
 /* ---------- Bottom nav ---------- */
 .navbar{position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-.navbar .inner{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);height:var(--nav-h)}
-.navbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:600;color:var(--muted)}
-.navbtn .ic{font-size:20px;line-height:1;padding:3px 14px;border-radius:999px}
+.navbar .inner{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);height:var(--nav-h)}
+.navbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10.5px;font-weight:600;color:var(--muted)}
+.navbtn .ic{font-size:19px;line-height:1;padding:3px 11px;border-radius:999px}
 .navbtn.active{color:var(--brand-dark)}
 .navbtn.active .ic{background:var(--brand-soft)}
 
@@ -96,6 +97,17 @@ input,select,textarea{font-family:inherit;font-size:16px;color:var(--ink)}
 .weeknav{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
 .weeknav .lbl{font-family:var(--display);font-size:18px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
 
+/* ---------- Calendar grid (agenda mês) ---------- */
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:4px 0 8px}
+.calhead{font-size:10px;font-weight:700;color:var(--muted);text-align:center;text-transform:uppercase;letter-spacing:.5px;padding:2px 0}
+.calday{aspect-ratio:1/1;border:1px solid var(--line);border-radius:10px;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-family:var(--display);font-weight:700;font-size:15px;color:var(--ink)}
+.calday.blank{border:none;background:transparent}
+.calday.today:not(.sel){color:var(--brand-dark)}
+.calday.sel{background:var(--brand);border-color:var(--brand);color:#fff}
+.calday .cnt{font-family:var(--body);font-size:9.5px;font-weight:600;color:var(--brand-dark);line-height:1}
+.calday.sel .cnt{color:#fff}
+.agenda-diasel{font-family:var(--display);font-size:16px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--brand-dark);margin:6px 0 8px}
+
 /* ---------- Presence buttons ---------- */
 .pres{display:flex;gap:6px;flex-shrink:0}
 .pres button{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:var(--surface);font-size:16px}
@@ -107,6 +119,9 @@ input,select,textarea{font-family:inherit;font-size:16px;color:var(--ink)}
 .field label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:5px}
 .field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:var(--surface)}
 .field textarea{resize:vertical;min-height:60px}
+.field input.invalid,.field select.invalid{border-color:var(--danger);background:var(--danger-soft)}
+.field .err{color:var(--danger);font-size:12px;margin-top:5px;display:none}
+.field.has-err .err{display:block}
 .frow{display:flex;gap:8px}.frow>.field{flex:1}
 .hrow{display:flex;gap:8px;align-items:center;margin-bottom:8px}
 .hrow select,.hrow input{padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
@@ -123,15 +138,21 @@ input,select,textarea{font-family:inherit;font-size:16px;color:var(--ink)}
 .sheet-actions{display:flex;gap:8px;margin-top:14px}
 .sheet-actions .btn{flex:1}
 
-/* ---------- Exercícios (ficha) ---------- */
-.exrow{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px}
-.exrow .exhead{display:flex;gap:6px;margin-bottom:6px}
-.exrow .exhead input{flex:1;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font-weight:600}
-.exrow .exhead button{width:34px;height:38px;border-radius:9px;border:1px solid var(--line);background:var(--bg);font-size:14px;flex-shrink:0}
-.exgrid{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:6px;margin-bottom:6px}
-.exgrid input{padding:8px;border:1px solid var(--line);border-radius:9px;text-align:center}
-.exgrid .cap{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;text-align:center;letter-spacing:.4px;margin-bottom:2px}
-.exrow .obs{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:9px;font-size:13px}
+/* ---------- Exercícios (ficha) — otimizado p/ celular ---------- */
+.exrow{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:9px 9px 9px 4px;margin-bottom:8px;display:flex;gap:4px;align-items:stretch}
+.exrow.dragging{opacity:.55;box-shadow:0 6px 18px rgba(14,122,95,.25)}
+.exrow.over{border-color:var(--brand)}
+.exdrag{width:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);touch-action:none;cursor:grab;flex-shrink:0}
+.exdrag .num{font-family:var(--display);font-weight:700;color:var(--brand-dark);font-size:17px}
+.exdrag .grip{font-size:13px;line-height:.7;letter-spacing:1px}
+.exbody{flex:1;min-width:0}
+.exhead{display:flex;gap:6px;margin-bottom:6px}
+.exhead input{flex:1;min-width:0;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font-weight:600}
+.exhead .rm{width:36px;height:38px;border-radius:9px;border:1px solid var(--line);background:var(--danger-soft);color:var(--danger);flex-shrink:0}
+.exgrid{display:grid;grid-template-columns:.85fr .95fr 1.05fr;gap:6px;margin-bottom:6px}
+.exgrid .cap{font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;text-align:center;letter-spacing:.4px;margin-bottom:2px}
+.exgrid input{width:100%;padding:9px 6px;border:1px solid var(--line);border-radius:9px;text-align:center}
+.exobs{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:9px;font-size:13px}
 .exnum{font-family:var(--display);font-weight:700;color:var(--brand-dark);font-size:18px;width:26px;text-align:center;flex-shrink:0;align-self:center}
 
 /* ---------- Segmented ---------- */
@@ -139,14 +160,20 @@ input,select,textarea{font-family:inherit;font-size:16px;color:var(--ink)}
 .seg button{flex:1;padding:8px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--muted)}
 .seg button.sel{background:var(--brand);color:#fff}
 
+/* ---------- Skeleton (carregando) ---------- */
+.skel{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);height:66px;margin-bottom:8px}
+.skel::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(14,122,95,.07),transparent);transform:translateX(-100%);animation:sk 1.15s infinite}
+@keyframes sk{100%{transform:translateX(100%)}}
+
 /* ---------- Misc ---------- */
+.toolbar{display:flex;gap:8px;margin-bottom:10px}
 .empty{text-align:center;color:var(--muted);padding:32px 16px;font-size:14px}
 .empty .big{font-size:34px;margin-bottom:6px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--nav-h) + 24px);z-index:60;background:var(--ink);color:#fff;padding:10px 18px;border-radius:12px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}
 .toast.show{opacity:1}
 .monthnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .monthnav .lbl{font-family:var(--display);font-size:20px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
-.section-lbl{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin:16px 0 8px}
+.section-lbl{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin:16px 0 8px;display:flex;align-items:center;justify-content:space-between}
 .center-screen{min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;max-width:440px;margin:0 auto}
 .logo-mark{width:72px;height:72px;border-radius:20px;background:var(--brand);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:36px}
 .center-screen h1{font-family:var(--display);font-size:34px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--brand-dark)}
@@ -154,13 +181,14 @@ input,select,textarea{font-family:inherit;font-size:16px;color:var(--ink)}
 .setup-steps{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;font-size:14px;width:100%}
 .setup-steps li{margin:0 0 10px 18px}
 .setup-steps code{background:var(--bg);padding:1px 6px;border-radius:6px;font-size:12.5px}
+.greet{font-family:var(--display);font-size:22px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--brand-dark);margin:2px 0 12px}
 a{color:var(--brand-dark)}
 @media(min-width:560px){.fab{right:calc(50vw - 260px + 16px)}}
 </style>
 </head>
 <body>
 
-<!-- ===== TELA DE CONFIGURAÇÃO (aparece se as chaves não foram coladas) ===== -->
+<!-- ===== TELA DE CONFIGURAÇÃO ===== -->
 <div id="scr-setup" class="center-screen hidden">
   <div class="logo-mark">🏋️</div>
   <h1>Prancheta</h1>
@@ -193,31 +221,57 @@ a{color:var(--brand-dark)}
 <!-- ===== APP ===== -->
 <div id="scr-app" class="app hidden">
   <div class="topbar">
-    <div><h1 id="topbar-title">Agenda</h1><div class="sub" id="topbar-sub"></div></div>
+    <div><h1 id="topbar-title">Início</h1><div class="sub" id="topbar-sub"></div></div>
     <div style="display:flex;gap:8px">
       <button class="iconbtn hidden" id="btn-install" title="Instalar app">⬇️</button>
-      <button class="iconbtn" id="btn-logout" title="Sair">⏻</button>
+      <button class="iconbtn" id="btn-logout" title="Sair da conta">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"/><path d="M10 17l-5-5 5-5"/><path d="M5 12h11"/></svg>
+      </button>
     </div>
   </div>
 
+  <!-- INÍCIO (dashboard) -->
+  <div class="view" id="view-inicio">
+    <div class="greet" id="greet">Bom dia!</div>
+    <div class="stats">
+      <div class="stat ok"><div class="num" id="dash-aulas">—</div><div class="lbl">Aulas hoje</div></div>
+      <div class="stat bad"><div class="num" id="dash-atraso">—</div><div class="lbl">Em atraso</div></div>
+      <div class="stat warn"><div class="num" id="dash-niver">—</div><div class="lbl">Aniversários</div></div>
+    </div>
+    <div class="section-lbl">Aulas de hoje</div>
+    <div id="dash-aulas-list"></div>
+    <div class="section-lbl">Pagamentos em atraso</div>
+    <div id="dash-atraso-list"></div>
+    <div class="section-lbl">Aniversariantes do mês</div>
+    <div id="dash-niver-list"></div>
+  </div>
+
   <!-- AGENDA -->
-  <div class="view" id="view-agenda">
+  <div class="view hidden" id="view-agenda">
+    <div class="seg" id="agenda-modo">
+      <button data-m="semana" class="sel">Semana</button>
+      <button data-m="mes">Mês</button>
+    </div>
     <div class="weeknav">
       <button class="iconbtn" id="wk-prev">‹</button>
       <div class="lbl" id="wk-label"></div>
       <button class="iconbtn" id="wk-next">›</button>
     </div>
     <div class="daystrip" id="daystrip"></div>
+    <div class="calgrid hidden" id="agenda-cal"></div>
+    <div class="agenda-diasel" id="agenda-diasel"></div>
     <div id="agenda-list"></div>
     <button class="btn ghost block" id="btn-avulsa" style="margin-top:6px">+ Aula avulsa neste dia</button>
   </div>
 
   <!-- ALUNOS -->
   <div class="view hidden" id="view-alunos">
-    <div class="field"><input id="aluno-busca" type="search" placeholder="Buscar aluno…"></div>
+    <div class="field" style="margin-bottom:10px"><input id="aluno-busca" type="search" placeholder="Buscar aluno…"></div>
+    <div class="toolbar"><button class="btn ghost small" id="btn-export-alunos">⬇️ Exportar alunos (CSV)</button></div>
     <div id="alunos-list"></div>
     <div class="section-lbl" id="lbl-arquivados-wrap" style="display:none">Arquivados</div>
     <div id="alunos-arquivados"></div>
+    <button class="btn ghost block hidden" id="btn-mais-arq" style="margin-top:2px">Carregar mais</button>
   </div>
 
   <!-- TREINOS -->
@@ -239,6 +293,7 @@ a{color:var(--brand-dark)}
       <div class="stat warn"><div class="num" id="fin-pendente">—</div><div class="lbl">A receber</div></div>
       <div class="stat bad"><div class="num" id="fin-atrasado">—</div><div class="lbl">Atrasado</div></div>
     </div>
+    <div class="toolbar"><button class="btn ghost small" id="btn-export-fin">⬇️ Exportar mês (CSV)</button></div>
     <div id="fin-list"></div>
   </div>
 
@@ -247,28 +302,31 @@ a{color:var(--brand-dark)}
 
 <!-- NAV -->
 <nav class="navbar hidden" id="navbar"><div class="inner">
-  <button class="navbtn active" data-view="agenda"><span class="ic">📅</span>Agenda</button>
+  <button class="navbtn active" data-view="inicio"><span class="ic">🏠</span>Início</button>
+  <button class="navbtn" data-view="agenda"><span class="ic">📅</span>Agenda</button>
   <button class="navbtn" data-view="alunos"><span class="ic">👥</span>Alunos</button>
   <button class="navbtn" data-view="treinos"><span class="ic">📋</span>Treinos</button>
   <button class="navbtn" data-view="fin"><span class="ic">💰</span>Financeiro</button>
 </div></nav>
 
-<!-- ===== SHEET: ALUNO (form) ===== -->
+<!-- ===== SHEET: ALUNO ===== -->
 <div class="sheet-bg" id="sh-aluno"><div class="sheet">
   <div class="grab"></div>
   <h2 id="sh-aluno-title">Novo aluno</h2>
   <div class="field"><label>Nome *</label><input id="al-nome" placeholder="Nome completo"></div>
   <div class="frow">
-    <div class="field"><label>Telefone (WhatsApp)</label><input id="al-tel" type="tel" placeholder="(31) 99999-9999"></div>
-    <div class="field"><label>E-mail</label><input id="al-email" type="email" placeholder="opcional"></div>
+    <div class="field"><label>Telefone (WhatsApp)</label><input id="al-tel" type="tel" inputmode="tel" placeholder="(31) 99999-9999"><div class="err">Informe um telefone com DDD (10 ou 11 dígitos).</div></div>
+    <div class="field"><label>E-mail</label><input id="al-email" type="email" inputmode="email" placeholder="opcional"><div class="err">E-mail inválido.</div></div>
   </div>
   <div class="frow">
     <div class="field"><label>Plano</label><input id="al-plano" placeholder="Ex: 3x por semana"></div>
+    <div class="field"><label>Local de atendimento</label><input id="al-local" placeholder="Ex: Academia Fit / Domicílio"></div>
   </div>
   <div class="frow">
-    <div class="field"><label>Mensalidade (R$)</label><input id="al-valor" type="number" inputmode="decimal" placeholder="0,00"></div>
+    <div class="field"><label>Mensalidade (R$)</label><input id="al-valor" type="number" inputmode="decimal" min="0" placeholder="0,00"><div class="err">Valor não pode ser negativo.</div></div>
     <div class="field"><label>Dia de vencimento</label><input id="al-venc" type="number" inputmode="numeric" min="1" max="28" placeholder="Ex: 5"></div>
   </div>
+  <div class="field"><label>Data de nascimento</label><input id="al-nasc" type="date"></div>
   <div class="field"><label>Horários fixos das aulas</label><div id="al-horarios"></div>
     <button class="btn soft small" id="btn-add-horario">+ Adicionar horário</button>
   </div>
@@ -285,7 +343,7 @@ a{color:var(--brand-dark)}
   <div id="detalhe-body"></div>
 </div></div>
 
-<!-- ===== SHEET: FICHA DE TREINO (editor) ===== -->
+<!-- ===== SHEET: FICHA (editor) ===== -->
 <div class="sheet-bg" id="sh-ficha"><div class="sheet">
   <div class="grab"></div>
   <h2 id="sh-ficha-title">Nova ficha</h2>
@@ -298,7 +356,7 @@ a{color:var(--brand-dark)}
   <div class="field"><label>Basear em modelo (opcional)</label>
     <select id="fi-modelo"><option value="">— começar do zero —</option></select>
   </div>
-  <div class="section-lbl">Exercícios</div>
+  <div class="section-lbl">Exercícios <span style="font-weight:600;text-transform:none;letter-spacing:0;color:var(--muted)">arraste ⠿ p/ reordenar</span></div>
   <div id="fi-exercicios"></div>
   <button class="btn soft small" id="btn-add-ex">+ Adicionar exercício</button>
   <div class="sheet-actions">
@@ -307,7 +365,7 @@ a{color:var(--brand-dark)}
   </div>
 </div></div>
 
-<!-- ===== SHEET: VER FICHA / HISTÓRICO ===== -->
+<!-- ===== SHEET: VER FICHA ===== -->
 <div class="sheet-bg" id="sh-verficha"><div class="sheet">
   <div class="grab"></div>
   <div id="verficha-body"></div>
@@ -333,7 +391,6 @@ a{color:var(--brand-dark)}
 <script>
 /* ============================================================
    ⚙️ FIREBASE_CONFIG — COLE SUAS CHAVES AQUI
-   (Console Firebase → Configurações do projeto → Seus apps → Web)
    ============================================================ */
 const FIREBASE_CONFIG = {
   apiKey:            "AIzaSyBsvqu-ai9U_p61gnpjgNIRg9HkHbZOvUc",
@@ -357,21 +414,29 @@ const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>'
 const iniciais = n => n.trim().split(/\s+/).slice(0,2).map(p=>p[0]).join('').toUpperCase();
 
 let db=null, auth=null;
-let ALUNOS = [];            // cache em tempo real
-let FICHAS = [];            // cache em tempo real
-let selData = hoje();       // dia selecionado na agenda
-let finYM = dstr(hoje()).slice(0,7); // mês do financeiro "YYYY-MM"
-let currentView = 'agenda';
+let ALUNOS = [], FICHAS = [];
+let loadedAlunos=false, loadedFichas=false;
+let selData = hoje();
+let finYM = dstr(hoje()).slice(0,7);
+let currentView = 'inicio';
+let agendaModo = 'semana';
 let editAlunoId = null, editFichaId = null;
+let arqShown = 10;
 let unsubAlunos=null, unsubFichas=null;
 
-function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2400); }
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2600); }
 function openSheet(id){ $(id).classList.add('open'); }
 function closeSheet(id){ $(id).classList.remove('open'); }
 $$('.sheet-bg').forEach(bg=>{
   bg.addEventListener('click',e=>{ if(e.target===bg) bg.classList.remove('open'); });
   bg.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>bg.classList.remove('open')));
 });
+/* roda uma escrita no Firestore tratando falha de rede com aviso claro */
+async function gravar(promise, okMsg){
+  try{ await promise; if(okMsg) toast(okMsg); return true; }
+  catch(e){ toast('Sem conexão com o servidor. Tente novamente.'); return false; }
+}
+const skeleton = (n=4) => Array.from({length:n},()=>'<div class="skel"></div>').join('');
 
 /* ---------- Boot ---------- */
 function boot(){
@@ -381,28 +446,33 @@ function boot(){
   firebase.initializeApp(FIREBASE_CONFIG);
   auth = firebase.auth(); db = firebase.firestore();
   db.enablePersistence({synchronizeTabs:true}).catch(()=>{});
-  auth.onAuthStateChanged(user=>{
-    if(user){ showApp(); } else { showLogin(); }
-  });
+  auth.onAuthStateChanged(user=>{ user ? showApp() : showLogin(); });
 }
 function showLogin(){
   $('#scr-login').classList.remove('hidden');
   $('#scr-app').classList.add('hidden'); $('#navbar').classList.add('hidden');
   if(unsubAlunos){unsubAlunos();unsubAlunos=null} if(unsubFichas){unsubFichas();unsubFichas=null}
+  loadedAlunos=loadedFichas=false;
 }
 function showApp(){
   $('#scr-login').classList.add('hidden');
   $('#scr-app').classList.remove('hidden'); $('#navbar').classList.remove('hidden');
-  listenData(); setView('agenda');
+  listenData(); setView('inicio');
 }
 $('#btn-login').addEventListener('click', async ()=>{
   const btn=$('#btn-login'); btn.disabled=true; $('#login-err').classList.add('hidden');
   try{ await auth.signInWithEmailAndPassword($('#login-email').value.trim(), $('#login-pass').value); }
-  catch(e){ const el=$('#login-err'); el.textContent='Não foi possível entrar. Confira e-mail e senha.'; el.classList.remove('hidden'); }
+  catch(e){
+    const el=$('#login-err');
+    el.textContent = e.code==='auth/network-request-failed'
+      ? 'Sem conexão. Verifique sua internet e tente de novo.'
+      : 'Não foi possível entrar. Confira e-mail e senha.';
+    el.classList.remove('hidden');
+  }
   btn.disabled=false;
 });
 $('#login-pass').addEventListener('keydown',e=>{ if(e.key==='Enter') $('#btn-login').click(); });
-$('#btn-logout').addEventListener('click',()=>{ if(confirm('Sair da conta?')) auth.signOut(); });
+$('#btn-logout').addEventListener('click',()=>{ if(confirm('Deseja sair da sua conta?')) auth.signOut(); });
 
 /* ---------- Listeners Firestore ---------- */
 function listenData(){
@@ -410,16 +480,16 @@ function listenData(){
   unsubAlunos = db.collection('alunos').onSnapshot(snap=>{
     ALUNOS = snap.docs.map(d=>({id:d.id,...d.data()}));
     ALUNOS.sort((a,b)=>a.nome.localeCompare(b.nome,'pt'));
-    render();
-  });
+    loadedAlunos=true; render();
+  }, ()=>{ loadedAlunos=true; toast('Falha ao carregar alunos. Verifique a conexão.'); render(); });
   unsubFichas = db.collection('fichas').onSnapshot(snap=>{
     FICHAS = snap.docs.map(d=>({id:d.id,...d.data()}));
-    render();
-  });
+    loadedFichas=true; render();
+  }, ()=>{ loadedFichas=true; render(); });
 }
 
 /* ---------- Navegação ---------- */
-const TITLES = {agenda:'Agenda', alunos:'Alunos', treinos:'Treinos', fin:'Financeiro'};
+const TITLES = {inicio:'Início', agenda:'Agenda', alunos:'Alunos', treinos:'Treinos', fin:'Financeiro'};
 function setView(v){
   currentView=v;
   $$('.view').forEach(el=>el.classList.add('hidden'));
@@ -428,7 +498,8 @@ function setView(v){
   $('#topbar-title').textContent = TITLES[v];
   const h=hoje();
   $('#topbar-sub').textContent = `${DIAS[h.getDay()]}, ${h.getDate()} de ${MESES[h.getMonth()]}`;
-  $('#fab').classList.toggle('hidden', v==='agenda'||v==='fin');
+  $('#fab').classList.toggle('hidden', !(v==='alunos'||v==='treinos'));
+  if(v==='alunos') arqShown=10;
   render();
   window.scrollTo(0,0);
 }
@@ -439,78 +510,181 @@ $('#fab').addEventListener('click',()=>{
 });
 
 function render(){
+  if(currentView==='inicio') renderInicio();
   if(currentView==='agenda') renderAgenda();
   if(currentView==='alunos') renderAlunos();
   if(currentView==='treinos') renderFichas();
   if(currentView==='fin') renderFin();
 }
 
+/* ---------- Utilidades de negócio ---------- */
+function saudacao(){ const h=new Date().getHours(); return h<12?'Bom dia!':h<18?'Boa tarde!':'Boa noite!'; }
+function vencido(competencia, diaVenc){
+  const venc = `${competencia}-${String(diaVenc||5).padStart(2,'0')}`;
+  return dstr(hoje()) > venc;
+}
+function cobrancaTexto(aluno, competencia, valor){
+  const [y,m]=competencia.split('-');
+  return `Olá, ${aluno.nome}! 👋\nPassando para lembrar da mensalidade de ${MESES[+m-1]}/${y}, no valor de ${fmtBRL(valor)}, com vencimento no dia ${aluno.diaVencimento||5}.\nQualquer dúvida, estou à disposição! 🏋️`;
+}
+function whatsLink(tel, texto){
+  const d=(tel||'').replace(/\D/g,'');
+  return `https://wa.me/55${d}${texto?`?text=${encodeURIComponent(texto)}`:''}`;
+}
+
+/* ---------- Exportação CSV ---------- */
+function baixarCSV(nome, linhas){
+  const csv = linhas.map(l=>l.map(c=>{
+    const s=String(c??''); return /[",;\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+  }).join(';')).join('\r\n');
+  const blob = new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download=nome; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+$('#btn-export-alunos').addEventListener('click',()=>{
+  const linhas=[['Nome','Telefone','E-mail','Plano','Local','Mensalidade','Vencimento','Ativo','Horários','Observações']];
+  ALUNOS.forEach(a=>linhas.push([
+    a.nome, a.telefone||'', a.email||'', a.plano||'', a.local||'',
+    (a.valorMensal||0).toFixed(2).replace('.',','), a.diaVencimento||'',
+    a.ativo===false?'Não':'Sim',
+    (a.horarios||[]).map(h=>`${DIAS[h.dia]} ${h.hora}`).join(' | '), a.obs||''
+  ]));
+  baixarCSV(`prancheta-alunos-${dstr(hoje())}.csv`, linhas);
+  toast('CSV de alunos gerado.');
+});
+$('#btn-export-fin').addEventListener('click', async ()=>{
+  try{
+    const snap = await db.collection('pagamentos').where('competencia','==',finYM).get();
+    const linhas=[['Aluno','Competência','Valor','Status','Vence dia']];
+    snap.forEach(d=>{ const p=d.data(); const a=ALUNOS.find(x=>x.id===p.alunoId); if(!a) return;
+      const atrasado = p.status!=='pago' && vencido(finYM, a.diaVencimento);
+      linhas.push([a.nome, finYM, (p.valor||0).toFixed(2).replace('.',','),
+        p.status==='pago'?'Pago':atrasado?'Atrasado':'Pendente', a.diaVencimento||5]);
+    });
+    baixarCSV(`prancheta-financeiro-${finYM}.csv`, linhas);
+    toast('CSV do mês gerado.');
+  }catch(e){ toast('Sem conexão para exportar agora.'); }
+});
 /* ============================================================
-   AGENDA
+   AGENDA (semana / mês) + linha de aula compartilhada
    ============================================================ */
 function inicioSemana(d){ const x=new Date(d); x.setDate(x.getDate()-x.getDay()); return x; }
-$('#wk-prev').addEventListener('click',()=>{ selData.setDate(selData.getDate()-7); renderAgenda(); });
-$('#wk-next').addEventListener('click',()=>{ selData.setDate(selData.getDate()+7); renderAgenda(); });
-
-async function renderAgenda(){
-  const ini = inicioSemana(selData);
-  const fim = new Date(ini); fim.setDate(fim.getDate()+6);
-  $('#wk-label').textContent = `${ini.getDate()} ${MESES[ini.getMonth()].slice(0,3)} – ${fim.getDate()} ${MESES[fim.getMonth()].slice(0,3)}`;
-  const strip=$('#daystrip'); strip.innerHTML='';
-  const hstr = dstr(hoje());
-  for(let i=0;i<7;i++){
-    const d=new Date(ini); d.setDate(d.getDate()+i);
-    const b=document.createElement('button');
-    b.className='daybtn'+(dstr(d)===dstr(selData)?' sel':'')+(dstr(d)===hstr?' today':'');
-    b.innerHTML=`<small>${DIAS[d.getDay()]}</small><b>${d.getDate()}</b>`;
-    b.addEventListener('click',()=>{ selData=d; renderAgenda(); });
-    strip.appendChild(b);
-  }
-  // aulas fixas do dia da semana
-  const dow = selData.getDay(), dataStr = dstr(selData);
-  const fixas = [];
+function montarFixas(date){
+  const dow=date.getDay(), fixas=[];
   ALUNOS.filter(a=>a.ativo!==false).forEach(a=>{
-    (a.horarios||[]).forEach(h=>{ if(h.dia===dow) fixas.push({alunoId:a.id, nome:a.nome, hora:h.hora, avulsa:false}); });
+    (a.horarios||[]).forEach(h=>{ if(h.dia===dow) fixas.push({alunoId:a.id, nome:a.nome, hora:h.hora, local:a.local||'', avulsa:false}); });
   });
-  // presenças do dia (inclui avulsas)
-  let presMap = {};
+  return fixas;
+}
+function criarLinhaAula(f, presMap, dataStr, rerender){
+  const p = presMap[f.alunoId+'|'+f.hora];
+  const st = p?p.status:null;
+  const el=document.createElement('div'); el.className='list-item';
+  const status = st==='presente'?'✅ Presente':st==='falta'?'❌ Faltou':'Aguardando check-in';
+  el.innerHTML=`
+    <div class="time-slab">${f.hora}<small>${f.avulsa?'AVULSA':'FIXA'}</small></div>
+    <div class="grow"><div class="title">${esc(f.nome)}</div>
+      <div class="meta">${status}${f.local?' · 📍 '+esc(f.local):''}</div></div>
+    <div class="pres">
+      <button class="${st==='presente'?'on-ok':''}" data-st="presente" title="Presente">✓</button>
+      <button class="${st==='falta'?'on-bad':''}" data-st="falta" title="Falta">✕</button>
+    </div>`;
+  el.querySelectorAll('.pres button').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const novo = (st===btn.dataset.st) ? null : btn.dataset.st;
+      const ref = db.collection('presencas').doc(`${f.alunoId}_${dataStr}_${f.hora.replace(':','')}`);
+      const ok = await gravar(
+        (novo===null && !f.avulsa) ? ref.delete()
+          : ref.set({alunoId:f.alunoId, data:dataStr, hora:f.hora, status:novo, avulsa:f.avulsa},{merge:true})
+      );
+      if(ok) rerender();
+    });
+  });
+  el.querySelector('.grow').addEventListener('click',()=>openDetalhe(f.alunoId));
+  return el;
+}
+async function carregarDia(date){
+  const dataStr=dstr(date);
+  const fixas=montarFixas(date);
+  let presMap={};
   try{
     const snap = await db.collection('presencas').where('data','==',dataStr).get();
-    snap.forEach(d=>{ presMap[d.data().alunoId+'|'+d.data().hora] = {id:d.id,...d.data()}; });
+    snap.forEach(d=>{ presMap[d.data().alunoId+'|'+d.data().hora]={id:d.id,...d.data()}; });
   }catch(e){}
   Object.values(presMap).forEach(p=>{
     if(p.avulsa && !fixas.some(f=>f.alunoId===p.alunoId && f.hora===p.hora)){
       const a=ALUNOS.find(x=>x.id===p.alunoId);
-      fixas.push({alunoId:p.alunoId, nome:a?a.nome:'(aluno removido)', hora:p.hora, avulsa:true});
+      fixas.push({alunoId:p.alunoId, nome:a?a.nome:'(aluno removido)', hora:p.hora, local:a?a.local||'':'', avulsa:true});
     }
   });
   fixas.sort((x,y)=>x.hora.localeCompare(y.hora));
-  const list=$('#agenda-list'); list.innerHTML='';
+  return {fixas, presMap, dataStr};
+}
+
+$$('#agenda-modo button').forEach(b=>b.addEventListener('click',()=>{
+  agendaModo=b.dataset.m;
+  $$('#agenda-modo button').forEach(x=>x.classList.toggle('sel',x===b));
+  renderAgenda();
+}));
+$('#wk-prev').addEventListener('click',()=>shiftAgenda(-1));
+$('#wk-next').addEventListener('click',()=>shiftAgenda(1));
+function shiftAgenda(dir){
+  if(agendaModo==='semana'){ selData.setDate(selData.getDate()+7*dir); }
+  else{
+    const y=selData.getFullYear(), m=selData.getMonth(), d=selData.getDate();
+    const dim=new Date(y, m+1+dir, 0).getDate();
+    selData=new Date(y, m+dir, Math.min(d,dim));
+  }
+  renderAgenda();
+}
+
+async function renderAgenda(){
+  const semana = agendaModo==='semana';
+  $('#daystrip').classList.toggle('hidden', !semana);
+  $('#agenda-cal').classList.toggle('hidden', semana);
+  if(semana){
+    const ini=inicioSemana(selData), fim=new Date(ini); fim.setDate(fim.getDate()+6);
+    $('#wk-label').textContent = `${ini.getDate()} ${MESES[ini.getMonth()].slice(0,3)} – ${fim.getDate()} ${MESES[fim.getMonth()].slice(0,3)}`;
+    const strip=$('#daystrip'); strip.innerHTML=''; const hstr=dstr(hoje());
+    for(let i=0;i<7;i++){
+      const d=new Date(ini); d.setDate(d.getDate()+i);
+      const b=document.createElement('button');
+      b.className='daybtn'+(dstr(d)===dstr(selData)?' sel':'')+(dstr(d)===hstr?' today':'');
+      b.innerHTML=`<small>${DIAS[d.getDay()]}</small><b>${d.getDate()}</b>`;
+      b.addEventListener('click',()=>{ selData=d; renderAgenda(); });
+      strip.appendChild(b);
+    }
+  } else {
+    $('#wk-label').textContent = `${MESES[selData.getMonth()]} ${selData.getFullYear()}`;
+    renderMes();
+  }
+  $('#agenda-diasel').textContent = `${DIAS[selData.getDay()]}, ${selData.getDate()} de ${MESES[selData.getMonth()]}`;
+  const list=$('#agenda-list'); list.innerHTML=skeleton(2);
+  const {fixas, presMap, dataStr} = await carregarDia(selData);
+  list.innerHTML='';
   if(!fixas.length){ list.innerHTML='<div class="empty"><div class="big">🗓️</div>Nenhuma aula neste dia.<br>Cadastre horários fixos nos alunos ou adicione uma aula avulsa.</div>'; return; }
-  fixas.forEach(f=>{
-    const p = presMap[f.alunoId+'|'+f.hora];
-    const st = p?p.status:null;
-    const el=document.createElement('div'); el.className='list-item';
-    el.innerHTML=`
-      <div class="time-slab">${f.hora}<small>${f.avulsa?'AVULSA':'FIXA'}</small></div>
-      <div class="grow"><div class="title">${esc(f.nome)}</div>
-        <div class="meta">${st==='presente'?'✅ Presente':st==='falta'?'❌ Faltou':'Aguardando check-in'}</div></div>
-      <div class="pres">
-        <button class="${st==='presente'?'on-ok':''}" data-st="presente" title="Presente">✓</button>
-        <button class="${st==='falta'?'on-bad':''}" data-st="falta" title="Falta">✕</button>
-      </div>`;
-    el.querySelectorAll('.pres button').forEach(btn=>{
-      btn.addEventListener('click', async ()=>{
-        const novo = (st===btn.dataset.st) ? null : btn.dataset.st;
-        const ref = db.collection('presencas').doc(`${f.alunoId}_${dataStr}_${f.hora.replace(':','')}`);
-        if(novo===null && !f.avulsa){ await ref.delete(); }
-        else{ await ref.set({alunoId:f.alunoId, data:dataStr, hora:f.hora, status:novo, avulsa:f.avulsa},{merge:true}); }
-        renderAgenda();
-      });
-    });
-    el.querySelector('.grow').addEventListener('click',()=>openDetalhe(f.alunoId));
-    list.appendChild(el);
+  fixas.forEach(f=>list.appendChild(criarLinhaAula(f, presMap, dataStr, renderAgenda)));
+}
+function renderMes(){
+  const cal=$('#agenda-cal'); cal.innerHTML='';
+  ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].forEach(d=>{
+    const h=document.createElement('div'); h.className='calhead'; h.textContent=d; cal.appendChild(h);
   });
+  const y=selData.getFullYear(), m=selData.getMonth();
+  const start=new Date(y,m,1).getDay(), dim=new Date(y,m+1,0).getDate();
+  const cnt=[0,0,0,0,0,0,0];
+  ALUNOS.filter(a=>a.ativo!==false).forEach(a=>(a.horarios||[]).forEach(h=>cnt[h.dia]++));
+  const hstr=dstr(hoje()), selStr=dstr(selData);
+  for(let i=0;i<start;i++){ const b=document.createElement('div'); b.className='calday blank'; cal.appendChild(b); }
+  for(let d=1;d<=dim;d++){
+    const date=new Date(y,m,d), ds=dstr(date), c=cnt[date.getDay()];
+    const btn=document.createElement('button');
+    btn.className='calday'+(ds===selStr?' sel':'')+(ds===hstr?' today':'');
+    btn.innerHTML=`<span>${d}</span>${c?`<span class="cnt">${c} aula${c>1?'s':''}</span>`:''}`;
+    btn.addEventListener('click',()=>{ selData=date; renderAgenda(); });
+    cal.appendChild(btn);
+  }
 }
 
 /* Aula avulsa */
@@ -523,35 +697,102 @@ $('#btn-avulsa').addEventListener('click',()=>{
 $('#btn-save-avulsa').addEventListener('click', async ()=>{
   const alunoId=$('#av-aluno').value, hora=$('#av-hora').value, dataStr=dstr(selData);
   if(!alunoId||!hora) return;
-  await db.collection('presencas').doc(`${alunoId}_${dataStr}_${hora.replace(':','')}`)
-    .set({alunoId, data:dataStr, hora, status:null, avulsa:true});
-  closeSheet('#sh-avulsa'); toast('Aula avulsa adicionada.'); renderAgenda();
+  const ok = await gravar(
+    db.collection('presencas').doc(`${alunoId}_${dataStr}_${hora.replace(':','')}`)
+      .set({alunoId, data:dataStr, hora, status:null, avulsa:true}),
+    'Aula avulsa adicionada.'
+  );
+  if(ok){ closeSheet('#sh-avulsa'); renderAgenda(); }
 });
+
+/* ============================================================
+   INÍCIO (dashboard)
+   ============================================================ */
+async function renderInicio(){
+  $('#greet').textContent = saudacao();
+  const aulasList=$('#dash-aulas-list'), atrasoList=$('#dash-atraso-list'), niverList=$('#dash-niver-list');
+  if(!loadedAlunos){ aulasList.innerHTML=skeleton(2); atrasoList.innerHTML=skeleton(1); niverList.innerHTML=skeleton(1); return; }
+
+  // Aulas de hoje
+  aulasList.innerHTML=skeleton(1);
+  const {fixas, presMap, dataStr} = await carregarDia(hoje());
+  $('#dash-aulas').textContent = fixas.length;
+  aulasList.innerHTML='';
+  if(!fixas.length) aulasList.innerHTML='<div class="empty" style="padding:18px">Nenhuma aula marcada para hoje. 🌿</div>';
+  else fixas.forEach(f=>aulasList.appendChild(criarLinhaAula(f, presMap, dataStr, renderInicio)));
+
+  // Aniversariantes do mês
+  const mesAtual=String(hoje().getMonth()+1).padStart(2,'0');
+  const nivers = ALUNOS.filter(a=>a.ativo!==false && a.nascimento && a.nascimento.slice(5,7)===mesAtual)
+    .sort((a,b)=>a.nascimento.slice(8,10)-b.nascimento.slice(8,10));
+  $('#dash-niver').textContent = nivers.length;
+  niverList.innerHTML='';
+  if(!nivers.length) niverList.innerHTML='<div class="empty" style="padding:18px">Nenhum aniversário este mês.</div>';
+  nivers.forEach(a=>{
+    const dia=+a.nascimento.slice(8,10);
+    const el=document.createElement('div'); el.className='list-item';
+    el.innerHTML=`<div class="avatar">🎂</div><div class="grow"><div class="title">${esc(a.nome)}</div>
+      <div class="meta">Dia ${dia} de ${MESES[hoje().getMonth()]}</div></div>`;
+    el.addEventListener('click',()=>openDetalhe(a.id));
+    niverList.appendChild(el);
+  });
+
+  // Pagamentos em atraso (todas as competências pendentes já vencidas)
+  atrasoList.innerHTML=skeleton(1);
+  let atrasados=[];
+  try{
+    const snap = await db.collection('pagamentos').where('status','==','pendente').get();
+    snap.forEach(d=>{ const p=d.data(); const a=ALUNOS.find(x=>x.id===p.alunoId);
+      if(a && a.ativo!==false && vencido(p.competencia, a.diaVencimento)) atrasados.push({...p, aluno:a}); });
+  }catch(e){}
+  atrasados.sort((x,y)=>x.competencia.localeCompare(y.competencia)||x.aluno.nome.localeCompare(y.aluno.nome,'pt'));
+  $('#dash-atraso').textContent = atrasados.length;
+  atrasoList.innerHTML='';
+  if(!atrasados.length) atrasoList.innerHTML='<div class="empty" style="padding:18px">Tudo em dia por aqui. 👏</div>';
+  atrasados.forEach(p=>{
+    const [y,m]=p.competencia.split('-');
+    const tel=(p.aluno.telefone||'').replace(/\D/g,'');
+    const el=document.createElement('div'); el.className='list-item';
+    el.innerHTML=`<div class="avatar">${iniciais(p.aluno.nome)}</div>
+      <div class="grow"><div class="title">${esc(p.aluno.nome)}</div>
+        <div class="meta">${MESES[+m-1].slice(0,3)}/${y} · ${fmtBRL(p.valor)} · venceu dia ${p.aluno.diaVencimento||5}</div></div>
+      ${tel?`<button class="btn soft small" data-cob>💬 Cobrar</button>`:''}`;
+    const cob=el.querySelector('[data-cob]');
+    if(cob) cob.addEventListener('click',e=>{ e.stopPropagation(); window.open(whatsLink(tel, cobrancaTexto(p.aluno, p.competencia, p.valor)),'_blank'); });
+    el.querySelector('.grow').addEventListener('click',()=>openDetalhe(p.aluno.id));
+    atrasoList.appendChild(el);
+  });
+}
 /* ============================================================
    ALUNOS
    ============================================================ */
+function cardAluno(a){
+  const el=document.createElement('div'); el.className='list-item';
+  const hs=(a.horarios||[]).map(h=>`${DIAS[h.dia]} ${h.hora}`).join(' · ');
+  const sub=[a.plano||'Sem plano', a.local?'📍 '+a.local:'', hs].filter(Boolean).join(' · ');
+  el.innerHTML=`<div class="avatar">${iniciais(a.nome)}</div>
+    <div class="grow"><div class="title">${esc(a.nome)}</div>
+    <div class="meta">${esc(sub)}</div></div>
+    <span class="chip ${a.ativo===false?'':'ok'}">${a.ativo===false?'Arquivado':fmtBRLshort(a.valorMensal)}</span>`;
+  el.addEventListener('click',()=>openDetalhe(a.id));
+  return el;
+}
 function renderAlunos(){
+  const l=$('#alunos-list');
+  if(!loadedAlunos){ l.innerHTML=skeleton(5); $('#alunos-arquivados').innerHTML=''; $('#lbl-arquivados-wrap').style.display='none'; $('#btn-mais-arq').classList.add('hidden'); return; }
   const q = ($('#aluno-busca').value||'').toLowerCase();
   const ativos = ALUNOS.filter(a=>a.ativo!==false && a.nome.toLowerCase().includes(q));
   const arq = ALUNOS.filter(a=>a.ativo===false && a.nome.toLowerCase().includes(q));
-  const mk = a=>{
-    const el=document.createElement('div'); el.className='list-item';
-    const hs=(a.horarios||[]).map(h=>`${DIAS[h.dia]} ${h.hora}`).join(' · ');
-    el.innerHTML=`<div class="avatar">${iniciais(a.nome)}</div>
-      <div class="grow"><div class="title">${esc(a.nome)}</div>
-      <div class="meta">${esc(a.plano||'Sem plano')}${hs?' · '+hs:''}</div></div>
-      <span class="chip ${a.ativo===false?'':'ok'}">${a.ativo===false?'Arquivado':fmtBRLshort(a.valorMensal)}</span>`;
-    el.addEventListener('click',()=>openDetalhe(a.id));
-    return el;
-  };
-  const l=$('#alunos-list'); l.innerHTML='';
+  l.innerHTML='';
   if(!ativos.length) l.innerHTML='<div class="empty"><div class="big">👥</div>Nenhum aluno ainda.<br>Toque no + para cadastrar o primeiro.</div>';
-  ativos.forEach(a=>l.appendChild(mk(a)));
+  ativos.forEach(a=>l.appendChild(cardAluno(a)));
   const la=$('#alunos-arquivados'); la.innerHTML='';
-  $('#lbl-arquivados-wrap').style.display = arq.length?'block':'none';
-  arq.forEach(a=>la.appendChild(mk(a)));
+  $('#lbl-arquivados-wrap').style.display = arq.length?'flex':'none';
+  arq.slice(0,arqShown).forEach(a=>la.appendChild(cardAluno(a)));
+  $('#btn-mais-arq').classList.toggle('hidden', arq.length<=arqShown);
 }
 $('#aluno-busca').addEventListener('input',renderAlunos);
+$('#btn-mais-arq').addEventListener('click',()=>{ arqShown+=10; renderAlunos(); });
 
 function addHorarioRow(h){
   const row=document.createElement('div'); row.className='hrow';
@@ -563,14 +804,28 @@ function addHorarioRow(h){
 }
 $('#btn-add-horario').addEventListener('click',()=>addHorarioRow(null));
 
+/* validação de campos */
+function setErr(el,on){ el.classList.toggle('invalid',on); const f=el.closest('.field'); if(f) f.classList.toggle('has-err',on); }
+['al-tel','al-email','al-valor'].forEach(id=>{ const el=document.getElementById(id); el.addEventListener('input',()=>setErr(el,false)); });
+function validarAluno(){
+  let ok=true;
+  const tel=$('#al-tel'), email=$('#al-email'), valor=$('#al-valor');
+  const telDig=tel.value.replace(/\D/g,'');
+  if(tel.value && (telDig.length<10||telDig.length>11)){ setErr(tel,true); ok=false; }
+  if(email.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)){ setErr(email,true); ok=false; }
+  if(valor.value && +valor.value<0){ setErr(valor,true); ok=false; }
+  return ok;
+}
 function openAlunoForm(id){
   editAlunoId=id;
   const a = id? ALUNOS.find(x=>x.id===id) : null;
   $('#sh-aluno-title').textContent = a?'Editar aluno':'Novo aluno';
   $('#al-nome').value=a?.nome||''; $('#al-tel').value=a?.telefone||'';
   $('#al-email').value=a?.email||''; $('#al-plano').value=a?.plano||'';
+  $('#al-local').value=a?.local||''; $('#al-nasc').value=a?.nascimento||'';
   $('#al-valor').value=a?.valorMensal??''; $('#al-venc').value=a?.diaVencimento??'';
   $('#al-obs').value=a?.obs||'';
+  ['al-tel','al-email','al-valor'].forEach(i=>setErr(document.getElementById(i),false));
   $('#al-horarios').innerHTML='';
   (a?.horarios||[]).forEach(addHorarioRow);
   openSheet('#sh-aluno');
@@ -578,17 +833,20 @@ function openAlunoForm(id){
 $('#btn-save-aluno').addEventListener('click', async ()=>{
   const nome=$('#al-nome').value.trim();
   if(!nome){ toast('Informe o nome do aluno.'); return; }
+  if(!validarAluno()){ toast('Confira os campos destacados em vermelho.'); return; }
   const horarios=[...$('#al-horarios').children].map(r=>({
     dia:+r.querySelector('select').value, hora:r.querySelector('input').value
   })).filter(h=>h.hora);
   const data={ nome, telefone:$('#al-tel').value.trim(), email:$('#al-email').value.trim(),
-    plano:$('#al-plano').value.trim(), valorMensal:+($('#al-valor').value||0),
+    plano:$('#al-plano').value.trim(), local:$('#al-local').value.trim(), nascimento:$('#al-nasc').value||'',
+    valorMensal:+($('#al-valor').value||0),
     diaVencimento:Math.min(28,Math.max(1,+($('#al-venc').value||5))), horarios,
     obs:$('#al-obs').value.trim() };
-  if(editAlunoId){ await db.collection('alunos').doc(editAlunoId).set(data,{merge:true}); toast('Aluno atualizado.'); }
+  let ok;
+  if(editAlunoId){ ok=await gravar(db.collection('alunos').doc(editAlunoId).set(data,{merge:true}),'Aluno atualizado.'); }
   else{ data.ativo=true; data.criadoEm=firebase.firestore.FieldValue.serverTimestamp();
-    await db.collection('alunos').add(data); toast('Aluno cadastrado.'); }
-  closeSheet('#sh-aluno');
+    ok=await gravar(db.collection('alunos').add(data),'Aluno cadastrado.'); }
+  if(ok) closeSheet('#sh-aluno');
 });
 
 /* Detalhe do aluno */
@@ -596,7 +854,6 @@ async function openDetalhe(id){
   const a=ALUNOS.find(x=>x.id===id); if(!a) return;
   const hs=(a.horarios||[]).map(h=>`<span class="chip">${DIAS[h.dia]} ${h.hora}</span>`).join(' ')||'<span class="chip">Sem horário fixo</span>';
   const fichasAluno = FICHAS.filter(f=>f.alunoId===id && f.ativo!==false);
-  // frequência do mês corrente
   const ym=dstr(hoje()).slice(0,7);
   let pres=0,faltas=0;
   try{
@@ -604,12 +861,14 @@ async function openDetalhe(id){
     snap.forEach(d=>{ const p=d.data(); if(p.data.startsWith(ym)){ if(p.status==='presente')pres++; if(p.status==='falta')faltas++; }});
   }catch(e){}
   const tel=(a.telefone||'').replace(/\D/g,'');
+  const niver = a.nascimento ? `${+a.nascimento.slice(8,10)}/${+a.nascimento.slice(5,7)}` : '';
   $('#detalhe-body').innerHTML=`
     <h2>${esc(a.nome)} ${a.ativo===false?'<span class="chip">Arquivado</span>':''}</h2>
     <div class="card">
       <div class="meta" style="color:var(--muted);font-size:13px">
         ${esc(a.plano||'Sem plano definido')} · ${fmtBRL(a.valorMensal)} · vence dia ${a.diaVencimento||'—'}<br>
-        ${a.telefone?esc(a.telefone):''} ${a.email?' · '+esc(a.email):''}
+        ${a.local?'📍 '+esc(a.local)+'<br>':''}
+        ${a.telefone?esc(a.telefone):''} ${a.email?' · '+esc(a.email):''} ${niver?' · 🎂 '+niver:''}
       </div>
       <div style="margin-top:8px">${hs}</div>
       ${a.obs?`<div style="margin-top:8px;font-size:13px">📝 ${esc(a.obs)}</div>`:''}
@@ -630,10 +889,11 @@ async function openDetalhe(id){
     </div>`;
   $('#dt-editar').addEventListener('click',()=>{ closeSheet('#sh-detalhe'); openAlunoForm(id); });
   $('#dt-ficha').addEventListener('click',()=>{ closeSheet('#sh-detalhe'); openFichaForm(null,id); });
-  const w=$('#dt-whats'); if(w) w.addEventListener('click',()=>window.open('https://wa.me/55'+tel,'_blank'));
+  const w=$('#dt-whats'); if(w) w.addEventListener('click',()=>window.open(whatsLink(tel),'_blank'));
   $('#dt-arquivar').addEventListener('click',async()=>{
-    await db.collection('alunos').doc(id).set({ativo:a.ativo===false},{merge:true});
-    closeSheet('#sh-detalhe'); toast(a.ativo===false?'Aluno reativado.':'Aluno arquivado.');
+    if(a.ativo!==false && !confirm(`Arquivar ${a.nome}? Ele deixa de aparecer na agenda e no financeiro.`)) return;
+    const ok=await gravar(db.collection('alunos').doc(id).set({ativo:a.ativo===false},{merge:true}), a.ativo===false?'Aluno reativado.':'Aluno arquivado.');
+    if(ok) closeSheet('#sh-detalhe');
   });
   $('#detalhe-body').querySelectorAll('[data-ficha]').forEach(el=>{
     el.addEventListener('click',()=>{ closeSheet('#sh-detalhe'); openVerFicha(el.dataset.ficha); });
@@ -651,44 +911,52 @@ $('#fin-next').addEventListener('click',()=>{ finYM=shiftYM(finYM,1); renderFin(
 
 async function renderFin(){
   $('#fin-label').textContent = ymLabel(finYM);
-  // garante cobranças do mês p/ alunos ativos
+  const list=$('#fin-list');
+  if(!loadedAlunos){ list.innerHTML=skeleton(5); return; }
+  list.innerHTML=skeleton(3);
   const ativos = ALUNOS.filter(a=>a.ativo!==false && (a.valorMensal||0)>0);
-  const batch = db.batch(); let created=0;
-  const snap = await db.collection('pagamentos').where('competencia','==',finYM).get();
-  const existentes = {}; snap.forEach(d=>existentes[d.data().alunoId]=({id:d.id,...d.data()}));
-  ativos.forEach(a=>{
-    if(!existentes[a.id]){
-      const ref=db.collection('pagamentos').doc(`${a.id}_${finYM}`);
-      batch.set(ref,{alunoId:a.id, competencia:finYM, valor:a.valorMensal, status:'pendente'});
-      existentes[a.id]={id:ref.id, alunoId:a.id, competencia:finYM, valor:a.valorMensal, status:'pendente'};
-      created++;
-    }
-  });
-  if(created) await batch.commit();
+  let existentes={};
+  try{
+    const snap = await db.collection('pagamentos').where('competencia','==',finYM).get();
+    snap.forEach(d=>existentes[d.data().alunoId]=({id:d.id,...d.data()}));
+    const batch = db.batch(); let created=0;
+    ativos.forEach(a=>{
+      if(!existentes[a.id]){
+        const ref=db.collection('pagamentos').doc(`${a.id}_${finYM}`);
+        batch.set(ref,{alunoId:a.id, competencia:finYM, valor:a.valorMensal, status:'pendente'});
+        existentes[a.id]={id:ref.id, alunoId:a.id, competencia:finYM, valor:a.valorMensal, status:'pendente'};
+        created++;
+      }
+    });
+    if(created) await batch.commit();
+  }catch(e){ list.innerHTML='<div class="empty">Sem conexão para carregar o financeiro.<br>Verifique a internet e tente de novo.</div>'; return; }
+
   const pags = Object.values(existentes);
-  const hj=hoje(), hymd=dstr(hj), thisYM=hymd.slice(0,7);
   let rec=0,pen=0,atr=0;
-  const list=$('#fin-list'); list.innerHTML='';
+  list.innerHTML='';
   if(!pags.length){ list.innerHTML='<div class="empty"><div class="big">💰</div>Nenhuma cobrança neste mês.<br>Cadastre alunos com mensalidade.</div>'; }
   pags.map(p=>({...p, aluno:ALUNOS.find(a=>a.id===p.alunoId)}))
     .filter(p=>p.aluno)
     .sort((x,y)=>x.aluno.nome.localeCompare(y.aluno.nome,'pt'))
     .forEach(p=>{
-      const venc = p.aluno.diaVencimento||5;
-      const vencStr = `${finYM}-${String(venc).padStart(2,'0')}`;
-      const atrasado = p.status!=='pago' && (finYM<thisYM || (finYM===thisYM && hymd>vencStr));
+      const venc=p.aluno.diaVencimento||5;
+      const atrasado = p.status!=='pago' && vencido(finYM, venc);
       if(p.status==='pago') rec+=p.valor; else if(atrasado) atr+=p.valor; else pen+=p.valor;
+      const tel=(p.aluno.telefone||'').replace(/\D/g,'');
       const el=document.createElement('div'); el.className='list-item';
       el.innerHTML=`<div class="avatar">${iniciais(p.aluno.nome)}</div>
         <div class="grow"><div class="title">${esc(p.aluno.nome)}</div>
         <div class="meta">${fmtBRL(p.valor)} · vence dia ${venc}</div></div>
+        ${(atrasado&&tel)?`<button class="btn bad small" data-cob title="Enviar cobrança">💬</button>`:''}
         <span class="chip ${p.status==='pago'?'ok':atrasado?'bad':'warn'}">${p.status==='pago'?'Pago ✓':atrasado?'Atrasado':'Pendente'}</span>`;
+      const cob=el.querySelector('[data-cob]');
+      if(cob) cob.addEventListener('click',e=>{ e.stopPropagation(); window.open(whatsLink(tel, cobrancaTexto(p.aluno, finYM, p.valor)),'_blank'); });
       el.addEventListener('click',async()=>{
         const novo = p.status==='pago' ? 'pendente' : 'pago';
         if(!confirm(`${p.aluno.nome}: marcar como ${novo==='pago'?'PAGO':'pendente'}?`)) return;
-        await db.collection('pagamentos').doc(p.id).set(
-          {status:novo, pagoEm: novo==='pago'?firebase.firestore.FieldValue.serverTimestamp():null},{merge:true});
-        renderFin();
+        const ok=await gravar(db.collection('pagamentos').doc(p.id).set(
+          {status:novo, pagoEm: novo==='pago'?firebase.firestore.FieldValue.serverTimestamp():null},{merge:true}));
+        if(ok) renderFin();
       });
       list.appendChild(el);
     });
@@ -697,10 +965,12 @@ async function renderFin(){
   $('#fin-atrasado').textContent=fmtBRLshort(atr);
 }
 /* ============================================================
-   TREINOS (fichas)
+   TREINOS (fichas) — editor mobile + arrastar p/ reordenar
    ============================================================ */
 function renderFichas(){
-  const list=$('#fichas-list'); list.innerHTML='';
+  const list=$('#fichas-list'), ml=$('#modelos-list');
+  if(!loadedFichas || !loadedAlunos){ list.innerHTML=skeleton(4); ml.innerHTML=skeleton(2); return; }
+  list.innerHTML='';
   const porAluno = FICHAS.filter(f=>f.alunoId && f.ativo!==false)
     .map(f=>({...f, aluno:ALUNOS.find(a=>a.id===f.alunoId)}))
     .filter(f=>f.aluno)
@@ -714,7 +984,7 @@ function renderFichas(){
     el.addEventListener('click',()=>openVerFicha(f.id));
     list.appendChild(el);
   });
-  const ml=$('#modelos-list'); ml.innerHTML='';
+  ml.innerHTML='';
   const modelos = FICHAS.filter(f=>!f.alunoId && f.ativo!==false).sort((x,y)=>x.nome.localeCompare(y.nome,'pt'));
   if(!modelos.length) ml.innerHTML='<div class="empty" style="padding:16px">Nenhum modelo salvo ainda.</div>';
   modelos.forEach(f=>{
@@ -726,28 +996,47 @@ function renderFichas(){
   });
 }
 
-function addExRow(ex,i){
+function renumEx(){ [...$('#fi-exercicios').children].forEach((r,i)=>{ const n=r.querySelector('.num'); if(n) n.textContent=i+1; }); }
+function addExRow(ex){
   const wrap=$('#fi-exercicios');
-  const row=document.createElement('div'); row.className='exrow'; row.style.display='flex'; row.style.gap='8px';
-  row.innerHTML=`<div class="exnum">${wrap.children.length+1}</div><div style="flex:1">
-    <div class="exhead">
-      <input class="ex-nome" placeholder="Nome do exercício" value="${esc(ex?.nome||'')}">
-      <button type="button" class="mv-up" title="Subir">↑</button>
-      <button type="button" class="mv-dn" title="Descer">↓</button>
-      <button type="button" class="rm" title="Remover" style="color:var(--danger)">🗑</button>
-    </div>
-    <div class="exgrid">
-      <div><div class="cap">Séries</div><input class="ex-series" inputmode="numeric" value="${esc(ex?.series||'')}" placeholder="4"></div>
-      <div><div class="cap">Reps</div><input class="ex-reps" value="${esc(ex?.reps||'')}" placeholder="10-12"></div>
-      <div><div class="cap">Carga</div><input class="ex-carga" value="${esc(ex?.carga||'')}" placeholder="20kg"></div>
-    </div>
-    <input class="obs ex-obs" placeholder="Observação (opcional)" value="${esc(ex?.obs||'')}">
-  </div>`;
-  const renum=()=>[...wrap.children].forEach((r,idx)=>r.querySelector('.exnum').textContent=idx+1);
-  row.querySelector('.rm').addEventListener('click',()=>{ row.remove(); renum(); });
-  row.querySelector('.mv-up').addEventListener('click',()=>{ if(row.previousElementSibling){ wrap.insertBefore(row,row.previousElementSibling); renum(); }});
-  row.querySelector('.mv-dn').addEventListener('click',()=>{ if(row.nextElementSibling){ wrap.insertBefore(row.nextElementSibling,row); renum(); }});
+  const row=document.createElement('div'); row.className='exrow';
+  row.innerHTML=`
+    <div class="exdrag" title="Arraste para reordenar"><span class="num">${wrap.children.length+1}</span><span class="grip">⠿</span></div>
+    <div class="exbody">
+      <div class="exhead">
+        <input class="ex-nome" placeholder="Nome do exercício" value="${esc(ex?.nome||'')}">
+        <button type="button" class="rm" title="Remover">🗑</button>
+      </div>
+      <div class="exgrid">
+        <div><div class="cap">Séries</div><input class="ex-series" inputmode="numeric" value="${esc(ex?.series||'')}" placeholder="4"></div>
+        <div><div class="cap">Reps</div><input class="ex-reps" value="${esc(ex?.reps||'')}" placeholder="10-12"></div>
+        <div><div class="cap">Carga</div><input class="ex-carga" value="${esc(ex?.carga||'')}" placeholder="20kg"></div>
+      </div>
+      <input class="exobs ex-obs" placeholder="Observação (opcional)" value="${esc(ex?.obs||'')}">
+    </div>`;
+  row.querySelector('.rm').addEventListener('click',()=>{ row.remove(); renumEx(); });
+  habilitarArrasto(row);
   wrap.appendChild(row);
+}
+/* arrastar para reordenar via pointer events (funciona no toque) */
+function habilitarArrasto(row){
+  const handle=row.querySelector('.exdrag');
+  handle.addEventListener('pointerdown',e=>{
+    e.preventDefault();
+    const wrap=$('#fi-exercicios');
+    row.classList.add('dragging');
+    const move=ev=>{
+      const y=ev.clientY;
+      const irmaos=[...wrap.children].filter(r=>r!==row);
+      let alvo=null;
+      for(const r of irmaos){ const b=r.getBoundingClientRect(); if(y < b.top + b.height/2){ alvo=r; break; } }
+      if(alvo) wrap.insertBefore(row,alvo); else wrap.appendChild(row);
+      renumEx();
+    };
+    const up=()=>{ row.classList.remove('dragging'); document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); };
+    document.addEventListener('pointermove',move);
+    document.addEventListener('pointerup',up);
+  });
 }
 $('#btn-add-ex').addEventListener('click',()=>addExRow(null));
 
@@ -799,22 +1088,21 @@ $('#btn-save-ficha').addEventListener('click', async ()=>{
   const data={ nome, alunoId, exercicios, ativo:true,
     versao: antiga && antiga.alunoId===alunoId ? (antiga.versao||1)+1 : 1,
     criadoEm: firebase.firestore.FieldValue.serverTimestamp() };
+  let ok;
   if(antiga && antiga.alunoId===alunoId && alunoId){
-    // versiona: nova doc, antiga vira histórico
-    await db.collection('fichas').add(data);
-    await db.collection('fichas').doc(editFichaId).set({ativo:false},{merge:true});
-    toast(`Nova versão v${data.versao} salva. A anterior foi para o histórico.`);
+    ok=await gravar((async()=>{
+      await db.collection('fichas').add(data);
+      await db.collection('fichas').doc(editFichaId).set({ativo:false},{merge:true});
+    })(), `Nova versão v${data.versao} salva. A anterior foi para o histórico.`);
   } else if(antiga && !alunoId){
-    await db.collection('fichas').doc(editFichaId).set({nome,exercicios},{merge:true});
-    toast('Modelo atualizado.');
+    ok=await gravar(db.collection('fichas').doc(editFichaId).set({nome,exercicios},{merge:true}),'Modelo atualizado.');
   } else {
-    await db.collection('fichas').add(data);
-    toast(alunoId?'Ficha criada.':'Modelo salvo.');
+    ok=await gravar(db.collection('fichas').add(data), alunoId?'Ficha criada.':'Modelo salvo.');
   }
-  closeSheet('#sh-ficha');
+  if(ok) closeSheet('#sh-ficha');
 });
 
-/* Ver ficha + histórico + compartilhar */
+/* Ver ficha + histórico + compartilhar + PDF */
 function fichaTexto(f, aluno){
   let t=`*${f.nome}*${f.versao?` (v${f.versao})`:''}\n`;
   if(aluno) t+=`Aluno: ${aluno.nome}\n`;
@@ -828,6 +1116,37 @@ function fichaTexto(f, aluno){
   });
   t+='\n— Enviado pela Prancheta 🏋️';
   return t;
+}
+function exportarFichaPDF(f, aluno){
+  const linhas=(f.exercicios||[]).map((e,i)=>{
+    const det=[e.series&&`${esc(e.series)} séries`, e.reps&&`${esc(e.reps)} reps`, e.carga&&esc(e.carga)].filter(Boolean).join(' · ')||'—';
+    return `<tr><td class="n">${i+1}</td><td><b>${esc(e.nome)}</b>${e.obs?`<div class="o">${esc(e.obs)}</div>`:''}</td><td class="d">${det}</td></tr>`;
+  }).join('');
+  const w=window.open('','_blank');
+  if(!w){ toast('Permita abrir a janela para gerar o PDF.'); return; }
+  w.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+    <title>${esc(f.nome)}</title>
+    <style>
+      *{margin:0;padding:0;box-sizing:border-box}
+      body{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#1B2420;padding:32px 28px}
+      .hd{border-bottom:3px solid #0E7A5F;padding-bottom:12px;margin-bottom:16px}
+      .hd h1{font-size:24px;color:#0A5C48}
+      .hd .sub{color:#67736C;font-size:14px;margin-top:4px}
+      table{width:100%;border-collapse:collapse}
+      td{padding:10px 8px;border-bottom:1px solid #E2E7E2;vertical-align:top;font-size:14px}
+      td.n{width:30px;font-weight:700;color:#0E7A5F}
+      td.d{width:38%;color:#41504a;text-align:right;white-space:nowrap}
+      td .o{color:#67736C;font-size:12.5px;margin-top:3px}
+      .ft{margin-top:22px;color:#9aa5a0;font-size:12px;text-align:center}
+      @media print{body{padding:0}}
+    </style></head><body>
+    <div class="hd"><h1>${esc(f.nome)}${f.versao?` <span style="font-size:15px;color:#67736C">v${f.versao}</span>`:''}</h1>
+      <div class="sub">${aluno?esc(aluno.nome)+' · ':''}Gerado em ${new Date().toLocaleDateString('pt-BR')}</div></div>
+    <table>${linhas}</table>
+    <div class="ft">Prancheta · Personal Trainer</div>
+    <script>window.onload=function(){setTimeout(function(){window.print()},250)}<\/script>
+    </body></html>`);
+  w.document.close();
 }
 function openVerFicha(id){
   const f=FICHAS.find(x=>x.id===id); if(!f) return;
@@ -849,23 +1168,22 @@ function openVerFicha(id){
         <div class="meta">${(h.exercicios||[]).length} exercícios</div></div><span>›</span></div>`).join('')}`:''}
     <div class="sheet-actions" style="flex-wrap:wrap">
       ${isAtiva?`<button class="btn soft" id="vf-editar">✏️ ${f.alunoId?'Nova versão':'Editar'}</button>`:''}
-      ${aluno&&aluno.telefone?`<button class="btn" id="vf-whats">💬 Enviar no WhatsApp</button>`:''}
-      <button class="btn ghost" id="vf-copiar">📄 Copiar texto</button>
+      ${aluno&&aluno.telefone?`<button class="btn" id="vf-whats">💬 WhatsApp</button>`:''}
+      <button class="btn ghost" id="vf-pdf">📄 Salvar PDF</button>
+      <button class="btn ghost" id="vf-copiar">📋 Copiar</button>
       ${isAtiva?`<button class="btn bad" id="vf-excluir">🗑</button>`:''}
     </div>`;
   const eb=$('#vf-editar'); if(eb) eb.addEventListener('click',()=>{ closeSheet('#sh-verficha'); openFichaForm(id); });
-  const wb=$('#vf-whats'); if(wb) wb.addEventListener('click',()=>{
-    const tel=aluno.telefone.replace(/\D/g,'');
-    window.open(`https://wa.me/55${tel}?text=${encodeURIComponent(fichaTexto(f,aluno))}`,'_blank');
-  });
+  const wb=$('#vf-whats'); if(wb) wb.addEventListener('click',()=>window.open(whatsLink(aluno.telefone, fichaTexto(f,aluno)),'_blank'));
+  $('#vf-pdf').addEventListener('click',()=>exportarFichaPDF(f,aluno));
   $('#vf-copiar').addEventListener('click',async()=>{
     try{ await navigator.clipboard.writeText(fichaTexto(f,aluno)); toast('Ficha copiada!'); }
     catch(e){ toast('Não foi possível copiar.'); }
   });
   const xb=$('#vf-excluir'); if(xb) xb.addEventListener('click',async()=>{
     if(!confirm('Excluir esta ficha? (as versões antigas do histórico são mantidas)')) return;
-    await db.collection('fichas').doc(id).delete();
-    closeSheet('#sh-verficha'); toast('Ficha excluída.');
+    const ok=await gravar(db.collection('fichas').doc(id).delete(),'Ficha excluída.');
+    if(ok) closeSheet('#sh-verficha');
   });
   $('#verficha-body').querySelectorAll('[data-h]').forEach(el=>{
     el.addEventListener('click',()=>openVerFicha(el.dataset.h));
@@ -885,7 +1203,6 @@ $('#btn-install').addEventListener('click',async()=>{
   if(deferredPrompt){ deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; $('#btn-install').classList.add('hidden'); }
 });
 window.addEventListener('appinstalled',()=>{ $('#btn-install').classList.add('hidden'); toast('App instalado! 🎉'); });
-// dica para iOS (não dispara beforeinstallprompt)
 (function(){
   const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
   const standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;

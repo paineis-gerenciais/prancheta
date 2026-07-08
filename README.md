@@ -76,7 +76,7 @@ O app abre em tela cheia, com ícone próprio, e o "casco" funciona mesmo offlin
 
 | Coleção      | Documento                          | Campos principais |
 |--------------|------------------------------------|-------------------|
-| `alunos`     | id automático                      | nome, telefone, email, plano, valorMensal, diaVencimento, horarios[{dia,hora}], obs, ativo |
+| `alunos`     | id automático                      | nome, telefone, email, plano, **local**, **nascimento** (YYYY-MM-DD), valorMensal, diaVencimento, horarios[{dia,hora}], obs, ativo |
 | `presencas`  | `{alunoId}_{data}_{hora}`          | alunoId, data, hora, status (presente/falta), avulsa |
 | `pagamentos` | `{alunoId}_{YYYY-MM}`              | alunoId, competencia, valor, status (pago/pendente), pagoEm |
 | `fichas`     | id automático                      | nome, alunoId (null = modelo), exercicios[{nome,series,reps,carga,obs}], versao, ativo |
@@ -86,3 +86,18 @@ O app abre em tela cheia, com ícone próprio, e o "casco" funciona mesmo offlin
 ## Fase 2 (planejada): Área do Aluno
 
 A base já está pronta para isso: cada aluno ganhará um usuário no Firebase Auth, um campo `uid` no documento do aluno, e regras do Firestore permitindo que ele leia apenas as próprias fichas e presenças.
+
+
+---
+
+## Novidades da Fase 1 (já implementadas)
+
+- **Tela Início (dashboard):** aulas de hoje, pagamentos em atraso (com botão de cobrança no WhatsApp) e aniversariantes do mês, tudo em uma tela ao abrir o app.
+- **Agenda semanal ou mensal:** alterne no seletor no topo da Agenda; o modo mês mostra a quantidade de aulas por dia e, ao tocar num dia, exibe as aulas dele.
+- **Local do aluno:** novo campo no cadastro, exibido na Agenda ao lado de cada aula (📍) e no detalhe do aluno.
+- **Data de nascimento:** novo campo, usado nos aniversariantes do mês.
+- **Ficha de treino em PDF:** botão *Salvar PDF* na ficha (abre a impressão do navegador → "Salvar como PDF").
+- **Cobrança automática:** no Financeiro e no dashboard, alunos em atraso ganham um botão que abre o WhatsApp com a mensagem de cobrança pré-preenchida.
+- **Exportação CSV:** exporte a lista de alunos (aba Alunos) e o financeiro do mês (aba Financeiro) para backup ou planilha.
+- **Editor de exercícios otimizado para celular:** cards compactos e reordenação por **arrastar** (segure o ⠿ e mova).
+- **Ícone de sair mais claro**, validação de telefone/e-mail/valores com destaque em vermelho, estados de carregamento (skeleton), "carregar mais" nos arquivados e avisos claros quando falta conexão.
